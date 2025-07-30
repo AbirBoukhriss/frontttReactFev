@@ -29,25 +29,29 @@ export default function Index() {
               Connecting clients in need to freelancers who deliver.
             </h1>
             <p className="text-blueGray-200 text-lg mb-8">
-              Connect with top talent and work on your terms. Our platform empowers freelancers and clients alike to collaborate and grow.
+              Connect with top talent and work on your terms. Our platform
+              empowers freelancers and clients alike to collaborate and grow.
             </p>
 
             {/* 🔍 Recherche */}
             <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 shadow-xl w-full">
               {/* Onglets */}
               <div className="flex mb-6 gap-2">
-                <a
-                  href="#"
+                {/* ⬇️ remplacé <a href="#"> par <button> */}
+                <button
+                  type="button"
                   className="w-1/2 text-center py-3 rounded-full font-semibold text-gray-800 bg-white hover:bg-gray-200 transition"
+                  aria-label="Find Talent"
                 >
                   Find Talent
-                </a>
-                <a
-                  href="#"
+                </button>
+                <button
+                  type="button"
                   className="w-1/2 text-center py-3 rounded-full font-semibold text-gray-800 bg-white hover:bg-gray-200 transition"
+                  aria-label="Browse Jobs"
                 >
                   Browse Jobs
-                </a>
+                </button>
               </div>
 
               {/* Barre de recherche */}
@@ -64,7 +68,9 @@ export default function Index() {
 
               {/* Logos "Trusted by" */}
               <div className="mt-4 flex items-center gap-y-4 text-white text-sm">
-                <span className="font-semibold whitespace-nowrap mr-4">Trusted by:</span>
+                <span className="font-semibold whitespace-nowrap mr-4">
+                  Trusted by:
+                </span>
                 <div className="flex items-center gap-x-6">
                   {[
                     {
@@ -101,92 +107,68 @@ export default function Index() {
         </div>
       </section>
 
+      <div className="w-full pt-32 px-4 bg-gray-50">
+        <div className="px-12">
+          <h2 className="text-4xl font-bold text-gray-800 mb-6">Popular services :</h2>
+        </div>
 
-
-<div className="w-full pt-32 px-4 bg-gray-50">
-  <div className="px-12">
-    <h2 className="text-4xl font-bold text-gray-800 mb-6">Popular services :</h2>
-  </div>
-
-  {/* Carrousel horizontal amélioré */}
-  <div className="overflow-x-auto px-12 pb-8">
-    <div
-      className="flex gap-6 transition-all duration-300 ease-in-out scroll-smooth"
-      style={{
-        scrollSnapType: "x mandatory",
-      }}
-    >
-      {[
-        {
-          src: "https://www.f-cdn.com/assets/main/en/assets/enterprise/landing-page/talent-networks-5-highres.jpg",
-          title: "Data Scientist",
-          link: "/data-scientist",
-        },
-        {
-          src: "https://www.f-cdn.com/assets/main/en/assets/enterprise/landing-page/talent-networks-6-highres.jpg",
-          title: "Machine Learning",
-          link: "/machine-learning",
-        },
-        {
-          src: "https://www.f-cdn.com/assets/main/en/assets/enterprise/landing-page/talent-networks-7-highres.jpg",
-          title: "Designer",
-          link: "/designer",
-        },
-        {
-          src: "https://www.f-cdn.com/assets/main/en/assets/enterprise/landing-page/talent-networks-1-highres.jpg",
-          title: "AI",
-          link: "/ai",
-        },
-        {
-          src: "https://www.f-cdn.com/assets/main/en/assets/enterprise/landing-page/talent-networks-8-highres.jpg",
-          title: "Software Development",
-          link: "/software-development",
-        },
-        {
-          src: "https://www.f-cdn.com/assets/main/en/assets/enterprise/landing-page/talent-networks-2-highres.jpg",
-          title: "Web Development",
-          link: "/web-development",
-        },
-      ].map((item, index) => (
-        <a
-          key={index}
-          href={item.link}
-          className="min-w-[300px] max-w-[300px] flex-shrink-0 rounded-xl overflow-hidden shadow-lg bg-white scroll-snap-align-start transform transition duration-300 hover:scale-105"
-        >
-          <img
-            src={item.src}
-            alt={item.title}
-            className="w-full h-48 object-cover"
-          />
-          <div className="text-center p-3 text-gray-800 font-semibold text-lg bg-white">
-            {item.title}
+        {/* Carrousel horizontal */}
+        <div className="overflow-x-auto px-12 pb-8">
+          <div
+            className="flex gap-6 transition-all duration-300 ease-in-out scroll-smooth"
+            style={{
+              scrollSnapType: "x mandatory",
+            }}
+          >
+            {[
+              {
+                src: "https://www.f-cdn.com/assets/main/en/assets/enterprise/landing-page/talent-networks-5-highres.jpg",
+                title: "Data Scientist",
+                link: "/data-scientist",
+              },
+              {
+                src: "https://www.f-cdn.com/assets/main/en/assets/enterprise/landing-page/talent-networks-6-highres.jpg",
+                title: "Machine Learning",
+                link: "/machine-learning",
+              },
+              {
+                src: "https://www.f-cdn.com/assets/main/en/assets/enterprise/landing-page/talent-networks-7-highres.jpg",
+                title: "Designer",
+                link: "/designer",
+              },
+              {
+                src: "https://www.f-cdn.com/assets/main/en/assets/enterprise/landing-page/talent-networks-1-highres.jpg",
+                title: "AI",
+                link: "/ai",
+              },
+              {
+                src: "https://www.f-cdn.com/assets/main/en/assets/enterprise/landing-page/talent-networks-8-highres.jpg",
+                title: "Software Development",
+                link: "/software-development",
+              },
+              {
+                src: "https://www.f-cdn.com/assets/main/en/assets/enterprise/landing-page/talent-networks-2-highres.jpg",
+                title: "Web Development",
+                link: "/web-development",
+              },
+            ].map((item, index) => (
+              // ⬇️ navigation interne avec Link (meilleur DX)
+              <Link
+                key={index}
+                to={item.link}
+                className="min-w-[300px] max-w-[300px] flex-shrink-0 rounded-xl overflow-hidden shadow-lg bg-white scroll-snap-align-start transform transition duration-300 hover:scale-105"
+              >
+                <img src={item.src} alt={item.title} className="w-full h-48 object-cover" />
+                <div className="text-center p-3 text-gray-800 font-semibold text-lg bg-white">
+                  {item.title}
+                </div>
+              </Link>
+            ))}
           </div>
-        </a>
-      ))}
-    </div>
-  </div>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        </div>
+      </div>
 
       <section className="mt-48 md:mt-40 pb-40 relative bg-blueGray-100">
-        
-  <div className="px-12">
-    <h2 className="text-4xl font-bold text-gray-800 mb-6">How it works </h2>
-  </div>
         <div
           className="-mt-20 top-0 bottom-auto left-0 right-0 w-full absolute h-20"
           style={{ transform: "translateZ(0)" }}
@@ -211,7 +193,10 @@ export default function Index() {
             <div className="w-10/12 md:w-6/12 lg:w-4/12 px-12 md:px-4 mr-auto ml-auto -mt-32">
               <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded-lg bg-lightBlue-500">
                 <video className="w-full rounded-t-lg" autoPlay muted loop playsInline>
-                  <source src="https://res.cloudinary.com/upwork-cloud-acquisition-prod/video/upload/brontes/hiw-v2/hiw-freelancer.mp4" type="video/mp4" />
+                  <source
+                    src="https://res.cloudinary.com/upwork-cloud-acquisition-prod/video/upload/brontes/hiw-v2/hiw-freelancer.mp4"
+                    type="video/mp4"
+                  />
                 </video>
 
                 <blockquote className="relative p-8 mb-4">
@@ -226,12 +211,10 @@ export default function Index() {
                       className="text-lightBlue-500 fill-current"
                     ></polygon>
                   </svg>
-                  <h4 className="text-xl font-bold text-white">
-                    Posting jobs is always free
-                  </h4>
+                  <h4 className="text-xl font-bold text-white">Posting jobs is always free</h4>
                   <p className="text-md font-light mt-2 text-white">
-                    Looking for top talent?
-                    Post your project for free and start receiving offers within minutes.
+                    Looking for top talent? Post your project for free and start receiving
+                    offers within minutes.
                   </p>
                 </blockquote>
               </div>
@@ -245,11 +228,10 @@ export default function Index() {
                       <div className="text-blueGray-500 p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-white">
                         <i className="fas fa-sitemap"></i>
                       </div>
-                      <h6 className="text-xl mb-1 font-semibold">
-                      Post Your Project
-                      </h6>
+                      <h6 className="text-xl mb-1 font-semibold">Post Your Project</h6>
                       <p className="mb-4 text-blueGray-500">
-                       As a client, you describe what you need—clearly and precisely. Whether it's a website, an app, or a design, just post it for free.
+                        As a client, you describe what you need—clearly and precisely. Whether
+                        it's a website, an app, or a design, just post it for free.
                       </p>
                     </div>
                   </div>
@@ -258,11 +240,10 @@ export default function Index() {
                       <div className="text-blueGray-500 p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-white">
                         <i className="fas fa-drafting-compass"></i>
                       </div>
-                      <h6 className="text-xl mb-1 font-semibold">
-                  Private Discussion
-                      </h6>
+                      <h6 className="text-xl mb-1 font-semibold">Private Discussion</h6>
                       <p className="mb-4 text-blueGray-500">
-                      Once you find a profile that fits, start a private chat to discuss details, timelines, and expectations.
+                        Once you find a profile that fits, start a private chat to discuss
+                        details, timelines, and expectations.
                       </p>
                     </div>
                   </div>
@@ -273,9 +254,10 @@ export default function Index() {
                       <div className="text-blueGray-500 p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-white">
                         <i className="fas fa-newspaper"></i>
                       </div>
-                      <h6 className="text-xl mb-1 font-semibold">     Freelancers Engage</h6>
+                      <h6 className="text-xl mb-1 font-semibold">Freelancers Engage</h6>
                       <p className="mb-4 text-blueGray-500">
-                        Talented freelancers will comment on your post, showcase interest, and ask clarifying questions if needed.
+                        Talented freelancers will comment on your post, showcase interest, and
+                        ask clarifying questions if needed.
                       </p>
                     </div>
                   </div>
@@ -284,11 +266,10 @@ export default function Index() {
                       <div className="text-blueGray-500 p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-white">
                         <i className="fas fa-file-alt"></i>
                       </div>
-                      <h6 className="text-xl mb-1 font-semibold">
-                     Work & Payment
-                      </h6>
+                      <h6 className="text-xl mb-1 font-semibold">Work & Payment</h6>
                       <p className="mb-4 text-blueGray-500">
-                     If you’re satisfied with the discussion and the proposal, you proceed with the project and make payment securely when you’re ready.
+                        If you’re satisfied with the discussion and the proposal, you proceed
+                        with the project and make payment securely when you’re ready.
                       </p>
                     </div>
                   </div>
@@ -304,13 +285,10 @@ export default function Index() {
               <div className="text-blueGray-500 p-3 text-center inline-flex items-center justify-center w-16 h-16 mb-6 shadow-lg rounded-full bg-white">
                 <i className="fas fa-sitemap text-xl"></i>
               </div>
-              <h3 className="text-3xl mb-2 font-semibold leading-normal">
-                CSS Components
-              </h3>
+              <h3 className="text-3xl mb-2 font-semibold leading-normal">CSS Components</h3>
               <p className="text-lg font-light leading-relaxed mt-4 mb-4 text-blueGray-600">
-                Every element that you need in a product comes built in as a
-                component. All components fit perfectly with each other and can
-                have different colours.
+                Every element that you need in a product comes built in as a component. All
+                components fit perfectly with each other and can have different colours.
               </p>
               <div className="block pb-6">
                 <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blueGray-500 bg-white uppercase last:mr-0 mr-2 mt-2">
@@ -341,6 +319,7 @@ export default function Index() {
               <a
                 href="https://www.creative-tim.com/learning-lab/tailwind/react/alerts/notus?ref=nr-index"
                 target="_blank"
+                rel="noreferrer"   /* ⬅️ ajouté */
                 className="font-bold text-blueGray-700 hover:text-blueGray-500 ease-linear transition-all duration-150"
               >
                 View All{" "}
@@ -348,15 +327,7 @@ export default function Index() {
               </a>
             </div>
 
-
-
-
-
-
-            
-
-
-<div className="w-full md:w-5/12 px-4 mr-auto ml-auto mt-32">
+            <div className="w-full md:w-5/12 px-4 mr-auto ml-auto mt-32">
               <div className="relative flex flex-col min-w-0 w-full mb-6 mt-48 md:mt-0">
                 <img
                   alt="..."
@@ -393,341 +364,35 @@ export default function Index() {
           </div>
         </div>
 
+        {/* Bloc Bordeaux */}
+        <div className="relative rounded-2xl overflow-hidden min-h-[300px] text-center flex flex-col items-center justify-center px-8 py-20 shadow-[0_10px_40px_rgba(0,0,0,0.3)]">
+          <div className="absolute inset-0">
+            <img
+              src="https://images.unsplash.com/photo-1612831661122-7f1ef4e51870?auto=format&fit=crop&w=1600&q=80"
+              alt="Bordeaux background"
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-[#4b1224] opacity-90"></div>
+          </div>
 
+          <div className="relative z-10">
+            <h2 className="text-white text-4xl sm:text-5xl font-light leading-tight">
+              Freelance services at your{" "}
+              <span className="text-orange-500 font-serif italic tracking-wide">
+                fingertips
+              </span>
+            </h2>
 
-
-
-
-
-
-
-
-
-
-
-
-       
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <div className="container mx-auto px-4 pb-32 pt-48">
-          <div className="items-center flex flex-wrap">
-            <div className="w-full md:w-5/12 ml-auto px-12 md:px-4">
-              <div className="md:pr-12">
-                <div className="text-blueGray-500 p-3 text-center inline-flex items-center justify-center w-16 h-16 mb-6 shadow-lg rounded-full bg-white">
-                  <i className="fas fa-file-alt text-xl"></i>
-                </div>
-                <h3 className="text-3xl font-semibold">
-                  Complex Documentation
-                </h3>
-                <p className="mt-4 text-lg leading-relaxed text-blueGray-500">
-                  This extension comes a lot of fully coded examples that help
-                  you get started faster. You can adjust the colors and also the
-                  programming language. You can change the text and images and
-                  you're good to go.
-                </p>
-                <ul className="list-none mt-6">
-                  <li className="py-2">
-                    <div className="flex items-center">
-                      <div>
-                        <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blueGray-500 bg-blueGray-50 mr-3">
-                          <i className="fas fa-fingerprint"></i>
-                        </span>
-                      </div>
-                      <div>
-                        <h4 className="text-blueGray-500">
-                          Built by Developers for Developers
-                        </h4>
-                      </div>
-                    </div>
-                  </li>
-                  <li className="py-2">
-                    <div className="flex items-center">
-                      <div>
-                        <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blueGray-500 bg-blueGray-50 mr-3">
-                          <i className="fab fa-html5"></i>
-                        </span>
-                      </div>
-                      <div>
-                        <h4 className="text-blueGray-500">
-                          Carefully crafted code for Components
-                        </h4>
-                      </div>
-                    </div>
-                  </li>
-                  <li className="py-2">
-                    <div className="flex items-center">
-                      <div>
-                        <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blueGray-500 bg-blueGray-50 mr-3">
-                          <i className="far fa-paper-plane"></i>
-                        </span>
-                      </div>
-                      <div>
-                        <h4 className="text-blueGray-500">
-                          Dynamic Javascript Components
-                        </h4>
-                      </div>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="w-full md:w-6/12 mr-auto px-4 pt-24 md:pt-0">
-              <img
-                alt="..."
-                className="max-w-full rounded-lg shadow-xl"
-                style={{
-                  transform:
-                    "scale(1) perspective(1040px) rotateY(-11deg) rotateX(2deg) rotate(2deg)",
-                }}
-                src={require("assets/img/documentation.png").default}
-              />
-            </div>
+            <a
+              href="about:blank"
+              target="_blank"
+              rel="noreferrer"  /* ⬅️ sécurisé */
+              className="mt-8 inline-block bg-white text-black px-6 py-2 rounded-md text-sm font-medium hover:bg-gray-100 transition duration-300 shadow"
+            >
+              Join Fiverr
+            </a>
           </div>
         </div>
-
- <div className="flex flex-col items-center mt-24 px-4 bg-blue-50 py-10">
-  <h2 className="text-4xl font-bold text-gray-900 mb-10">Real results from clients</h2>
-
-  {/* Groupe 1 - 3 cartes */}
-  <div className="flex flex-wrap justify-center gap-6 w-full max-w-6xl mb-6">
-    {/* CARD 1 */}
-    <div className="flex-1 basis-0 max-w-[340px] bg-white p-6 rounded-xl shadow-md border">
-      <div className="flex flex-col justify-between h-full">
-        <div className="text-left">
-          <p className="text-sm text-gray-600 font-semibold mb-2 flex items-center">
-            💻 <span className="ml-2">DEV & IT</span>
-          </p>
-          <p className="text-gray-900 text-base mb-4">
-            "Haris came in and helped us transfer knowledge from our departing developer, meeting a serious deadline, without fail. His knowledge and experience are exceptional."
-          </p>
-          <div className="text-orange-500 text-base mb-4">★★★★★</div>
-        </div>
-        <div className="flex justify-between items-center mt-4">
-          <div className="text-left">
-            <p className="text-sm font-medium text-gray-900">Work done by Haris S.</p>
-            <p className="text-sm text-gray-500">Full-Stack Developer</p>
-            <p className="text-sm text-gray-400 mt-1">Apr 7, 2025</p>
-          </div>
-          <img
-            src="https://randomuser.me/api/portraits/men/32.jpg"
-            alt="Haris"
-            className="w-12 h-12 rounded-full object-cover"
-          />
-        </div>
-      </div>
-    </div>
-
-    {/* CARD 2 */}
-    <div className="flex-1 basis-0 max-w-[340px] bg-white p-6 rounded-xl shadow-md border">
-      <div className="flex flex-col justify-between h-full">
-        <div className="text-left">
-          <p className="text-sm text-gray-600 font-semibold mb-2 flex items-center">
-            🎨 <span className="ml-2">DESIGN & CREATIVE</span>
-          </p>
-          <p className="text-gray-900 text-base mb-4">
-            "Ezzan did an amazing job editing my videos—fast turnaround, great attention to detail, and very easy to work with."
-          </p>
-          <div className="text-orange-500 text-base mb-4">★★★★★</div>
-        </div>
-        <div className="flex justify-between items-center mt-4">
-          <div className="text-left">
-            <p className="text-sm font-medium text-gray-900">Work done by Ezzan S.</p>
-            <p className="text-sm text-gray-500">Video Editor</p>
-            <p className="text-sm text-gray-400 mt-1">Mar 14, 2025</p>
-          </div>
-          <img
-            src="https://randomuser.me/api/portraits/women/45.jpg"
-            alt="Ezzan"
-            className="w-12 h-12 rounded-full object-cover"
-          />
-        </div>
-      </div>
-    </div>
-
-    {/* CARD 3 */}
-    <div className="flex-1 basis-0 max-w-[340px] bg-white p-6 rounded-xl shadow-md border">
-      <div className="flex flex-col justify-between h-full">
-        <div className="text-left">
-          <p className="text-sm text-gray-600 font-semibold mb-2 flex items-center">
-            🧠 <span className="ml-2">AI SERVICES</span>
-          </p>
-          <p className="text-gray-900 text-base mb-4">
-            "Rick is a fantastic AI/ML engineer. He delivered a complete, working LLM solution beyond our expectations!"
-          </p>
-          <div className="text-orange-500 text-base mb-4">★★★★★</div>
-        </div>
-        <div className="flex justify-between items-center mt-4">
-          <div className="text-left">
-            <p className="text-sm font-medium text-gray-900">Work done by Richard C.</p>
-            <p className="text-sm text-gray-500">AI/ML Engineer</p>
-            <p className="text-sm text-gray-400 mt-1">Mar 28, 2025</p>
-          </div>
-          <img
-            src="https://randomuser.me/api/portraits/men/71.jpg"
-            alt="Richard"
-            className="w-12 h-12 rounded-full object-cover"
-          />
-        </div>
-      </div>
-    </div>
-  </div>
-
-  {/* Groupe 2 - 3 cartes */}
-  <div className="flex flex-wrap justify-center gap-6 w-full max-w-6xl">
-    {/* CARD 4 */}
-    <div className="flex-1 basis-0 max-w-[340px] p-6 rounded-xl shadow-md border bg-white">
-      <div className="flex flex-col justify-between h-full">
-        <div className="text-left">
-          <p className="text-sm text-gray-600 font-semibold mb-2 flex items-center">
-            💼 <span className="ml-2">SALES & MARKETING</span>
-          </p>
-          <p className="text-gray-900 text-base mb-4">
-            "We loved working with Jibran and his team. They are very professional and know what they are doing..."
-          </p>
-          <div className="text-orange-500 text-base mb-4">★★★★★</div>
-        </div>
-        <div className="flex justify-between items-center mt-4">
-          <div className="text-left">
-            <p className="text-sm font-medium text-gray-900">Work done by Jibran Z.</p>
-            <p className="text-sm text-gray-500">Social media posts and marketing</p>
-            <p className="text-sm text-gray-400 mt-1">Mar 10, 2025</p>
-          </div>
-          <img
-            src="https://randomuser.me/api/portraits/men/75.jpg"
-            alt="Jibran"
-            className="w-12 h-12 rounded-full object-cover"
-          />
-        </div>
-      </div>
-    </div>
-
-    {/* CARD 5 */}
-    <div className="flex-1 basis-0 max-w-[340px] p-6 rounded-xl shadow-md border bg-white">
-      <div className="flex flex-col justify-between h-full">
-        <div className="text-left">
-          <p className="text-sm text-gray-600 font-semibold mb-2 flex items-center">
-            ✍️ <span className="ml-2">WRITING & TRANSLATION</span>
-          </p>
-          <p className="text-gray-900 text-base mb-4">
-            "Michael is very skilled and highly professional. Understood the assignment, followed instructions..."
-          </p>
-          <div className="text-orange-500 text-base mb-4">★★★★★</div>
-        </div>
-        <div className="flex justify-between items-center mt-4">
-          <div className="text-left">
-            <p className="text-sm font-medium text-gray-900">Work done by Michael L.</p>
-            <p className="text-sm text-gray-500">Email marketing series</p>
-            <p className="text-sm text-gray-400 mt-1">Jan 31, 2025</p>
-          </div>
-          <img
-            src="https://randomuser.me/api/portraits/men/83.jpg"
-            alt="Michael"
-            className="w-12 h-12 rounded-full object-cover"
-          />
-        </div>
-      </div>
-    </div>
-
-    {/* CARD 6 */}
-    <div className="flex-1 basis-0 max-w-[340px] p-6 rounded-xl shadow-md border bg-white">
-      <div className="flex flex-col justify-between h-full">
-        <div className="text-left">
-          <p className="text-sm text-gray-600 font-semibold mb-2 flex items-center">
-            🛠️ <span className="ml-2">ADMIN & CUSTOMER SUPPORT</span>
-          </p>
-          <p className="text-gray-900 text-base mb-4">
-            "Ahmed was a great asset to our team. He brought a keen eye for inefficiencies and improved our workflow."
-          </p>
-          <div className="text-orange-500 text-base mb-4">★★★★★</div>
-        </div>
-        <div className="flex justify-between items-center mt-4">
-          <div className="text-left">
-            <p className="text-sm font-medium text-gray-900">Work done by Ahmed A.</p>
-            <p className="text-sm text-gray-500">Technical Project Manager</p>
-            <p className="text-sm text-gray-400 mt-1">Feb 5, 2025</p>
-          </div>
-          <img
-            src="https://randomuser.me/api/portraits/men/64.jpg"
-            alt="Ahmed"
-            className="w-12 h-12 rounded-full object-cover"
-          />
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-
-
-
-
-
-
-
-<div className="relative rounded-2xl overflow-hidden min-h-[300px] text-center flex flex-col items-center justify-center px-8 py-20 shadow-[0_10px_40px_rgba(0,0,0,0.3)]">
-  {/* Image de fond */}
-  <div className="absolute inset-0">
-    <img
-      src="https://images.unsplash.com/photo-1612831661122-7f1ef4e51870?auto=format&fit=crop&w=1600&q=80"
-      alt="Bordeaux background"
-      className="w-full h-full object-cover"
-    />
-    {/* Overlay bordeaux */}
-    <div className="absolute inset-0 bg-[#4b1224] opacity-90"></div>
-  </div>
-
-  {/* Contenu au-dessus */}
-  <div className="relative z-10">
-    <h2 className="text-white text-4xl sm:text-5xl font-light leading-tight">
-      Freelance services at your{' '}
-      <span className="text-orange-500 font-serif italic tracking-wide">fingertips</span>
-    </h2>
-
-    <a
-      href="about:blank"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="mt-8 inline-block bg-white text-black px-6 py-2 rounded-md text-sm font-medium hover:bg-gray-100 transition duration-300 shadow"
-    >
-      Join Fiverr
-    </a>
-  </div>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       </section>
 
       <section className="block relative z-1 bg-blueGray-600">
@@ -801,6 +466,7 @@ export default function Index() {
                   href="https://tailwindcss.com/?ref=creativetim"
                   className="text-blueGray-300"
                   target="_blank"
+                  rel="noreferrer"   /* ⬅️ ajouté */
                 >
                   Tailwind CSS
                 </a>{" "}
@@ -815,6 +481,7 @@ export default function Index() {
               <a
                 href="https://github.com/creativetimofficial/notus-react?ref=nr-index"
                 target="_blank"
+                rel="noreferrer"   /* ⬅️ ajouté */
                 className="github-star mt-4 inline-block text-white font-bold px-6 py-4 rounded outline-none focus:outline-none mr-1 mb-1 bg-blueGray-700 active:bg-blueGray-600 uppercase text-sm shadow hover:shadow-lg"
               >
                 Github Star
@@ -857,18 +524,17 @@ export default function Index() {
                   😍
                 </span>
               </p>
-              <h3 className="font-semibold text-3xl">
-                Do you love this Starter Kit?
-              </h3>
+              <h3 className="font-semibold text-3xl">Do you love this Starter Kit?</h3>
               <p className="text-blueGray-500 text-lg leading-relaxed mt-4 mb-4">
-                Cause if you do, it can be yours now. Hit the buttons below to
-                navigate to get the Free version for your next project. Build a
-                new web app or give an old project a new look!
+                Cause if you do, it can be yours now. Hit the buttons below to navigate to
+                get the Free version for your next project. Build a new web app or give an
+                old project a new look!
               </p>
               <div className="sm:block flex flex-col mt-10">
                 <a
                   href="https://www.creative-tim.com/learning-lab/tailwind/react/overview/notus?ref=nr-index"
                   target="_blank"
+                  rel="noreferrer"   /* ⬅️ ajouté */
                   className="get-started text-white font-bold px-6 py-4 rounded outline-none focus:outline-none mr-1 mb-2 bg-lightBlue-500 active:bg-lightBlue-600 uppercase text-sm shadow hover:shadow-lg ease-linear transition-all duration-150"
                 >
                   Get started
@@ -876,6 +542,7 @@ export default function Index() {
                 <a
                   href="https://github.com/creativetimofficial/notus-react?ref=nr-index"
                   target="_blank"
+                  rel="noreferrer"   /* ⬅️ ajouté */
                   className="github-star sm:ml-1 text-white font-bold px-6 py-4 rounded outline-none focus:outline-none mr-1 mb-1 bg-blueGray-700 active:bg-blueGray-600 uppercase text-sm shadow hover:shadow-lg"
                 >
                   <i className="fab fa-github text-lg mr-1"></i>
@@ -887,6 +554,7 @@ export default function Index() {
           </div>
         </div>
       </section>
+
       <Footer />
     </>
   );
