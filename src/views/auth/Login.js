@@ -1,113 +1,142 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { useHistory, Link } from "react-router-dom";
+import axios from "axios";
+
+// Import react-toastify
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Login() {
+  const history = useHistory();
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+const handleLogin = async () => {
+  const { email, password } = formData;
+
+  if (!email || !password) {
+    toast.error("Veuillez remplir tous les champs.");
+    return;
+  }
+
+  try {
+    setIsSubmitting(true);
+
+    const res = await axios.post(
+      "http://localhost:5001/users/login",
+      { email, password },
+      { withCredentials: true }
+    );
+
+    const user = res.data.user;
+
+    if (!user || !user.role) {
+      toast.error("Rôle utilisateur introuvable.");
+      return;
+    }
+
+    toast.success("Connexion réussie !");
+
+    setTimeout(() => {
+      if (user.role === "client") {
+        history.push("/admin/dashboard");
+      } else if (user.role === "freelancer") {
+        history.push("/admin/settings");
+      } else {
+        toast.error("Rôle non reconnu.");
+      }
+    }, 1500);
+  } catch (error) {
+    console.error(error);
+    const msg = error.response?.data?.message || "Erreur de connexion.";
+    toast.error(msg);
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
+
   return (
     <>
+      <ToastContainer />
       <div className="container mx-auto px-4 h-full">
         <div className="flex content-center items-center justify-center h-full">
           <div className="w-full lg:w-4/12 px-4">
             <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-200 border-0">
               <div className="rounded-t mb-0 px-6 py-6">
                 <div className="text-center mb-3">
-                  <h6 className="text-blueGray-500 text-sm font-bold">
-                    Sign in with
-                  </h6>
-                </div>
-                <div className="btn-wrapper text-center">
-                  <button
-                    className="bg-white active:bg-blueGray-50 text-blueGray-700 font-normal px-4 py-2 rounded outline-none focus:outline-none mr-2 mb-1 uppercase shadow hover:shadow-md inline-flex items-center font-bold text-xs ease-linear transition-all duration-150"
-                    type="button"
-                  >
-                    <img
-                      alt="..."
-                      className="w-5 mr-1"
-                      src={require("assets/img/github.svg").default}
-                    />
-                    Github
-                  </button>
-                  <button
-                    className="bg-white active:bg-blueGray-50 text-blueGray-700 font-normal px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 uppercase shadow hover:shadow-md inline-flex items-center font-bold text-xs ease-linear transition-all duration-150"
-                    type="button"
-                  >
-                    <img
-                      alt="..."
-                      className="w-5 mr-1"
-                      src={require("assets/img/google.svg").default}
-                    />
-                    Google
-                  </button>
+                  <h6 className="text-blueGray-500 text-sm font-bold">Sign in</h6>
                 </div>
                 <hr className="mt-6 border-b-1 border-blueGray-300" />
               </div>
               <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
-                <div className="text-blueGray-400 text-center mb-3 font-bold">
-                  <small>Or sign in with credentials</small>
-                </div>
-                <form>
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    if (!isSubmitting) handleLogin();
+                  }}
+                >
+                  <div className="text-blueGray-400 text-center mb-3 font-bold">
+                    <small>Connectez-vous avec vos identifiants</small>
+                  </div>
+
                   <div className="relative w-full mb-3">
-                    <label
-                      className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                      htmlFor="grid-password"
-                    >
+                    <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">
                       Email
                     </label>
                     <input
                       type="email"
-                      className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      className="border px-3 py-2 rounded w-full text-sm text-gray-700"
                       placeholder="Email"
+                      required
                     />
                   </div>
 
                   <div className="relative w-full mb-3">
-                    <label
-                      className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                      htmlFor="grid-password"
-                    >
-                      Password
+                    <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">
+                      Mot de passe
                     </label>
                     <input
                       type="password"
-                      className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      placeholder="Password"
+                      name="password"
+                      value={formData.password}
+                      onChange={handleChange}
+                      className="border px-3 py-2 rounded w-full text-sm text-gray-700"
+                      placeholder="Mot de passe"
+                      required
                     />
-                  </div>
-                  <div>
-                    <label className="inline-flex items-center cursor-pointer">
-                      <input
-                        id="customCheckLogin"
-                        type="checkbox"
-                        className="form-checkbox border-0 rounded text-blueGray-700 ml-1 w-5 h-5 ease-linear transition-all duration-150"
-                      />
-                      <span className="ml-2 text-sm font-semibold text-blueGray-600">
-                        Remember me
-                      </span>
-                    </label>
                   </div>
 
                   <div className="text-center mt-6">
                     <button
-                      className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
-                      type="button"
+                      className="bg-blueGray-800 text-white text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg w-full"
+                      type="submit"
+                      disabled={isSubmitting}
                     >
-                      Sign In
+                      {isSubmitting ? "Connexion..." : "Se connecter"}
                     </button>
                   </div>
                 </form>
               </div>
             </div>
+
             <div className="flex flex-wrap mt-6 relative">
               <div className="w-1/2">
-                <Link 
-                  to="/auth/forget"
-                  className="text-blueGray-200"
-                >
-                  <small>Forgot password?</small>
+                <Link to="/auth/forget" className="text-blueGray-200">
+                  <small>Mot de passe oublié ?</small>
                 </Link>
               </div>
               <div className="w-1/2 text-right">
                 <Link to="/auth/register" className="text-blueGray-200">
-                  <small>Create new account</small>
+                  <small>Créer un compte</small>
                 </Link>
               </div>
             </div>

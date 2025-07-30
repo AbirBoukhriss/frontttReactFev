@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useHistory, Link } from 'react-router-dom'; // Ajout de Link
-
+import { useHistory, Link } from 'react-router-dom';
 import { addUserClient } from "../../Service/ApiUser";
 
 export default function Register() {
-  const history = useHistory(); // Remplace useNavigate
+  const history = useHistory();
 
   const [newUser, setNewUser] = useState({
     username: "",
     email: "",
     password: "",
+    role: "", // <-- Nouveau champ pour le rôle
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -26,16 +26,18 @@ export default function Register() {
   const isValidPassword = (pwd) => pwd.length >= 6;
 
   const handleAddUser = async () => {
-    const { username, email, password } = newUser;
+    const { username, email, password, role } = newUser;
 
-    if (!username || !email || !password) {
-      alert("Tous les champs sont obligatoires.");
+    if (!username || !email || !password || !role) {
+      alert("Tous les champs sont obligatoires, y compris le rôle.");
       return;
     }
+
     if (!isValidEmail(email)) {
       alert("L'email doit être valide.");
       return;
     }
+
     if (!isValidPassword(password)) {
       alert("Le mot de passe doit contenir au moins 6 caractères.");
       return;
@@ -45,17 +47,11 @@ export default function Register() {
       setIsSubmitting(true);
       await addUserClient(newUser);
       alert("✅ Utilisateur créé avec succès !");
-      setNewUser({ username: "", email: "", password: "" });
-      history.push("/auth/login"); // Redirection avec useHistory
+      setNewUser({ username: "", email: "", password: "", role: "" });
+      history.push("/auth/login");
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.error("❌ Erreur API :", {
-          status: error.response?.status,
-          data: error.response?.data,
-          message: error.message,
-          url: error.config?.url,
-          method: error.config?.method,
-        });
+        console.error("❌ Erreur API :", error);
         const msg =
           error.response?.data?.message ||
           "Erreur lors de la création de l'utilisateur.";
@@ -78,15 +74,9 @@ export default function Register() {
               <div className="text-center mb-3">
                 <h6 className="text-blueGray-500 text-sm font-bold">Sign up with</h6>
               </div>
-              <div className="btn-wrapper text-center">
-                {/* Tes boutons Github / Google */}
-              </div>
               <hr className="mt-6 border-b-1 border-blueGray-300" />
             </div>
             <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
-              <div className="text-blueGray-400 text-center mb-3 font-bold">
-                <small>Or sign up with credentials</small>
-              </div>
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -95,17 +85,16 @@ export default function Register() {
               >
                 <div className="relative w-full mb-3">
                   <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="username">
-                    Name
+                    Nom
                   </label>
                   <input
                     id="username"
-                    type="text"
                     name="username"
+                    type="text"
                     value={newUser.username}
-                    className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                    placeholder="username"
                     onChange={handleChange}
-                    autoComplete="username"
+                    className="input w-full"
+                    placeholder="Nom d'utilisateur"
                     required
                   />
                 </div>
@@ -116,77 +105,74 @@ export default function Register() {
                   </label>
                   <input
                     id="email"
-                    type="email"
                     name="email"
+                    type="email"
                     value={newUser.email}
-                    className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                    placeholder="Email"
                     onChange={handleChange}
-                    autoComplete="email"
+                    className="input w-full"
+                    placeholder="Email"
                     required
                   />
                 </div>
 
                 <div className="relative w-full mb-3">
                   <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="password">
-                    Password
+                    Mot de passe
                   </label>
                   <input
                     id="password"
-                    type="password"
                     name="password"
+                    type="password"
                     value={newUser.password}
-                    className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                    placeholder="Password"
                     onChange={handleChange}
-                    autoComplete="new-password"
+                    className="input w-full"
+                    placeholder="Mot de passe"
                     minLength={6}
                     required
                   />
                 </div>
 
-                <div>
-                  <label className="inline-flex items-center cursor-pointer">
-                    <input
-                      id="customCheckLogin"
-                      type="checkbox"
-                      className="form-checkbox border-0 rounded text-blueGray-700 ml-1 w-5 h-5 ease-linear transition-all duration-150"
-                      required
-                    />
-                    <span className="ml-2 text-sm font-semibold text-blueGray-600">
-                      I agree with the{" "}
-                      <button
-                        type="button"
-                        className="text-lightBlue-500 underline"
-                        onClick={() => window.open("/privacy", "_blank")}
-                      >
-                        Privacy Policy
-                      </button>
-                    </span>
+                {/* Sélecteur de rôle */}
+                <div className="relative w-full mb-3">
+                  <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="role">
+                    Rôle
                   </label>
+                  <select
+                    id="role"
+                    name="role"
+                    value={newUser.role}
+                    onChange={handleChange}
+                    className="input w-full"
+                    required
+                  >
+                    <option value="">-- Sélectionner un rôle --</option>
+                    <option value="client">Client</option>
+                    <option value="freelancer">Freelancer</option>
+                  </select>
                 </div>
 
                 <div className="text-center mt-6">
                   <button
-                    className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150 disabled:opacity-60"
+                    className="bg-blueGray-800 text-white text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg w-full"
                     type="submit"
                     disabled={isSubmitting}
                   >
-                    {isSubmitting ? "Creating..." : "Create Account"}
+                    {isSubmitting ? "Création en cours..." : "Créer un compte"}
                   </button>
                 </div>
               </form>
             </div>
           </div>
+
           <div className="flex flex-wrap mt-6 relative">
             <div className="w-1/2">
               <Link to="/auth/forget" className="text-blueGray-200">
-                <small>Forgot password?</small>
+                <small>Mot de passe oublié ?</small>
               </Link>
             </div>
             <div className="w-1/2 text-right">
               <Link to="/auth/login" className="text-blueGray-200">
-                <small>Login</small>
+                <small>Se connecter</small>
               </Link>
             </div>
           </div>
