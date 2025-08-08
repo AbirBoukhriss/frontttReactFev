@@ -3,3 +3,35 @@
 @tailwind components;
 
 @tailwind utilities;
+
+.embla {
+  overflow: hidden;
+  width: 100%;
+  padding: 40px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.embla__container {
+  display: flex;
+  gap: 20px;
+}
+
+.embla__slide {
+  flex: 0 0 60%;
+  min-width: 0;
+  background-color: #fff;
+  border-radius: 20px;
+  box-shadow: 0 0 0 2px #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+}
+
+.embla__slide__number {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #2d2d2d;
+}
+
