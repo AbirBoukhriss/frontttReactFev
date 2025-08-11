@@ -238,7 +238,8 @@ export default function Index() {
       <span className="text-orange-500">Popular</span> Services
     </h2>
   </div>
-
+<br></br>
+<br></br>
   {/* Carrousel horizontal */}
   <div className="overflow-x-auto px-12 pb-10 no-scrollbar">
     <div
@@ -290,8 +291,10 @@ export default function Index() {
               alt={item.title}
               className="w-full h-full object-cover rounded-t-2xl transform group-hover:scale-105 transition-transform duration-500"
             />
-            <div className="absolute bottom-0 left-0 w-full bg-white/80 backdrop-blur-sm px-4 py-2">
-              <p className="text-md font-semibold text-gray-900">{item.title}</p>
+            <div className="absolute bottom-0 left-0 w-full px-4 py-2 flex items-center">
+              <p className="text-md font-semibold text-white border border-white px-3 py-1 rounded-lg">
+                {item.title}
+              </p>
             </div>
           </div>
         </Link>
@@ -349,8 +352,6 @@ export default function Index() {
 
 
 
-
-
 <br></br>
 <br></br>
 <br></br>
@@ -358,9 +359,8 @@ export default function Index() {
 
 
 
-
-<section className="relative bg-gray-50 py-24">
-  {/* SVG Top Decoration */}
+<section className="relative bg-gradient-to-b from-gray-50 to-white py-24 overflow-hidden">
+  {/* Décoration vague */}
   <div className="absolute top-0 left-0 w-full h-20 -mt-20" style={{ transform: "translateZ(0)" }}>
     <svg
       className="absolute bottom-0"
@@ -372,85 +372,85 @@ export default function Index() {
     </svg>
   </div>
 
-  <div className="container mx-auto px-6 lg:px-20">
-    <div className="flex flex-col lg:flex-row items-center gap-20">
-      {/* Video Block */}
-      <div className="w-full lg:w-5/12 group relative overflow-hidden rounded-3xl shadow-xl">
-        <div className="relative z-10">
-          <video
-            className="rounded-3xl w-full h-[360px] object-cover transition-transform duration-500 group-hover:scale-105"
-            autoPlay
-            muted
-            loop
-            playsInline
-          >
-            <source
-              src="https://res.cloudinary.com/upwork-cloud-acquisition-prod/video/upload/brontes/hiw-v2/hiw-freelancer.mp4"
-              type="video/mp4"
-            />
-          </video>
-        </div>
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 rounded-b-3xl z-20">
-          <h4 className="text-xl font-semibold text-white">Posting jobs is always free</h4>
-          <p className="text-sm text-white mt-1">
+  <div className="container mx-auto px-6 lg:px-20 relative z-10">
+    <div className="flex flex-col lg:flex-row items-center gap-16">
+      
+      {/* Bloc vidéo avec effet verre */}
+      <div className="w-full lg:w-5/12 group relative rounded-3xl overflow-hidden shadow-xl transform hover:scale-[1.02] transition-all duration-500">
+        <video
+          className="w-full h-[360px] object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+        >
+          <source
+            src="https://res.cloudinary.com/upwork-cloud-acquisition-prod/video/upload/brontes/hiw-v2/hiw-freelancer.mp4"
+            type="video/mp4"
+          />
+        </video>
+        <div className="absolute bottom-4 left-4 right-4 bg-white/20 backdrop-blur-lg p-4 rounded-xl shadow-lg border border-white/30">
+          <h4 className="text-lg font-bold text-white">Posting jobs is always free</h4>
+          <p className="text-sm text-white/90">
             Start receiving offers within minutes from talented freelancers.
           </p>
         </div>
       </div>
 
-      {/* Text Blocks */}
+      {/* Texte et étapes */}
       <div className="w-full lg:w-7/12">
-        <h2 className="text-4xl font-bold text-gray-800 mb-10">
+        <h2 className="text-4xl font-extrabold text-gray-800 mb-10 tracking-tight">
           <span className="text-orange-500">How it works</span> for clients
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Step 1 */}
-          <div className="bg-white rounded-2xl shadow-sm p-6 hover:shadow-md transition-all">
-            <div className="w-12 h-12 flex items-center justify-center bg-orange-100 text-orange-500 rounded-full mb-4 text-xl">
-              <i className="fas fa-sitemap"></i>
-            </div>
-            <h4 className="text-lg font-semibold text-gray-800 mb-2">Post Your Project</h4>
-            <p className="text-sm text-gray-600">
-              Clearly describe your needs. Whether it's an app, a design, or a site — post it for free.
-            </p>
-          </div>
 
-          {/* Step 2 */}
-          <div className="bg-white rounded-2xl shadow-sm p-6 hover:shadow-md transition-all">
-            <div className="w-12 h-12 flex items-center justify-center bg-purple-100 text-purple-500 rounded-full mb-4 text-xl">
-              <i className="fas fa-comments"></i>
-            </div>
-            <h4 className="text-lg font-semibold text-gray-800 mb-2">Private Discussion</h4>
-            <p className="text-sm text-gray-600">
-              Chat directly with freelancers. Discuss details, set timelines and clarify everything.
-            </p>
-          </div>
+        <div className="relative">
+          {/* Ligne verticale décorative */}
+          <div className="absolute left-5 top-0 w-1 bg-gradient-to-b from-orange-500 to-transparent h-full rounded-full"></div>
 
-          {/* Step 3 */}
-          <div className="bg-white rounded-2xl shadow-sm p-6 hover:shadow-md transition-all">
-            <div className="w-12 h-12 flex items-center justify-center bg-green-100 text-green-500 rounded-full mb-4 text-xl">
-              <i className="fas fa-users"></i>
-            </div>
-            <h4 className="text-lg font-semibold text-gray-800 mb-2">Freelancers Engage</h4>
-            <p className="text-sm text-gray-600">
-              Pros will show interest, comment, and ask questions to better understand your project.
-            </p>
-          </div>
-
-          {/* Step 4 */}
-          <div className="bg-white rounded-2xl shadow-sm p-6 hover:shadow-md transition-all">
-            <div className="w-12 h-12 flex items-center justify-center bg-blue-100 text-blue-500 rounded-full mb-4 text-xl">
-              <i className="fas fa-lock"></i>
-            </div>
-            <h4 className="text-lg font-semibold text-gray-800 mb-2">Work & Payment</h4>
-            <p className="text-sm text-gray-600">
-              When you're ready, start the project and pay securely once you're satisfied.
-            </p>
+          <div className="space-y-8 pl-14">
+            {[
+              {
+                icon: "fas fa-sitemap",
+                color: "bg-orange-500",
+                title: "Post Your Project",
+                desc: "Clearly describe your needs. Whether it's an app, a design, or a site — post it for free."
+              },
+              {
+                icon: "fas fa-comments",
+                color: "bg-purple-500",
+                title: "Private Discussion",
+                desc: "Chat directly with freelancers. Discuss details, set timelines and clarify everything."
+              },
+              {
+                icon: "fas fa-users",
+                color: "bg-green-500",
+                title: "Freelancers Engage",
+                desc: "Pros will show interest, comment, and ask questions to better understand your project."
+              },
+              {
+                icon: "fas fa-lock",
+                color: "bg-blue-500",
+                title: "Work & Payment",
+                desc: "When you're ready, start the project and pay securely once you're satisfied."
+              }
+            ].map((step, i) => (
+              <div
+                key={i}
+                className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all relative"
+              >
+                <div className={`absolute -left-9 top-6 w-10 h-10 flex items-center justify-center ${step.color} text-white rounded-full shadow-lg`}>
+                  <i className={step.icon}></i>
+                </div>
+                <h4 className="text-lg font-semibold text-gray-800 mb-2">{step.title}</h4>
+                <p className="text-sm text-gray-600">{step.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </div>
     </div>
   </div>
+
 
 
 
@@ -686,7 +686,6 @@ export default function Index() {
 
 
 
-
 <div className="w-full flex justify-center px-4 py-10">
   <div className="w-full max-w-4xl flex flex-col md:flex-row rounded-xl shadow-md overflow-hidden">
     
@@ -696,9 +695,12 @@ export default function Index() {
       <h2 className="text-2xl md:text-3xl font-bold mb-4 leading-snug">
         Trusted globally by over 1 million businesses, small to large
       </h2>
-      <button className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-5 rounded mt-4 w-fit">
+      <Link
+        to="/auth/login"
+        className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-5 rounded mt-4 w-fit"
+      >
         START NOW FOR FREE
-      </button>
+      </Link>
     </div>
 
     {/* Bloc droit - image */}

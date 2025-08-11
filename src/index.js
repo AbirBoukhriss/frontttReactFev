@@ -9,6 +9,10 @@ import SoftwareDevelopment from "./views/softwareDevelopment";
 import Designer from "./views/designer";
 import Ai from "./views/Ai";
 import MachineLearning from "./views/machineLearning";
+import FindProjectPage from "views/FindProjectPage";
+import HowItWorksPage from "views/HowItWorksPage";
+import FreelancerPage from "./views/FreelancerPage";
+ // ✅ export default obligatoire
 
 // ✅ Import des layouts
 import Admin from "layouts/Admin.js";
@@ -27,6 +31,9 @@ ReactDOM.render(
   <BrowserRouter>
     <Switch>
       {/* ✅ Routes des services */}
+      <Route path="/freelancer-page" component={FreelancerPage} />
+      <Route path="/how-it-works" component={HowItWorksPage} />
+      <Route path="/find-project-page" component={FindProjectPage} />
       <Route path="/data-scientist" component={DataScientist} />
       <Route path="/software-development" component={SoftwareDevelopment} />
       <Route path="/ai" component={Ai} />
