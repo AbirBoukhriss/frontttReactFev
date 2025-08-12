@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import "../assets/styles/tailwind.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'; // nécessaire pour carrousel
-import { Navigate } from 'react-router-dom';
+
 
 // components
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
