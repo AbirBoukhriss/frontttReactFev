@@ -230,8 +230,6 @@ export default function Index() {
 
 
 
-
-
 <div className="w-full pt-32 px-4 bg-gray-50">
   <div className="px-12">
     <h2 className="text-4xl font-bold text-gray-800 mb-6">
@@ -307,55 +305,130 @@ export default function Index() {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <br></br>
 <br></br>
 <br></br>
 <br></br>
+<br></br>
+<br></br>
+<br></br>
+<br></br>
+<br></br>
+<br></br>
+<br></br>
+
+
+
+
+<section className="pb-20 -mt-24">
+  <div className="container mx-auto px-4">
+    <div className="flex flex-wrap">
+      
+      {/* Bloc 1 */}
+      <div className="lg:pt-12 pt-6 w-full md:w-4/12 px-4 text-center">
+        <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg">
+          <div className="px-4 py-5 flex-auto">
+            <img
+              src="https://cdn3.f-cdn.com/files/download/129620350/create-web.jpg?image-optimizer=force&format=webply&width=967"
+              alt="Create Web"
+              className="mx-auto rounded-lg shadow-lg mb-4 max-h-48 object-cover"
+            />
+            <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-red-400">
+              <i className="fas fa-award"></i>
+            </div>
+            <h6 className="text-xl font-semibold">Steps to a Successful Website</h6>
+            <p className="mt-2 mb-4 text-blueGray-500">
+              A clear 15-step process to build a professional, effective, and impactful website.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Bloc 2 */}
+      <div className="w-full md:w-4/12 px-4 text-center">
+        <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg">
+          <div className="px-4 py-5 flex-auto">
+            <img
+              src="https://cdn6.f-cdn.com/files/download/129620373/website-pa.jpg?image-optimizer=force&format=webply&width=967"
+              alt="Website PA"
+              className="mx-auto rounded-lg shadow-lg mb-4 max-h-48 object-cover"
+            />
+            <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-lightBlue-400">
+              <i className="fas fa-retweet"></i>
+            </div>
+            <h6 className="text-xl font-semibold">Why Website Speed Matters — and How to Fix It</h6>
+            <p className="mt-2 mb-4 text-blueGray-500">
+              Slow loading hurts SEO. Learn how to boost your site’s speed and get top scores on Google Page Speed Insights
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Bloc 3 */}
+      <div className="pt-6 w-full md:w-4/12 px-4 text-center">
+        <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg">
+          <div className="px-4 py-5 flex-auto">
+            <img
+              src="https://cdn3.f-cdn.com/files/download/129620458/mobile-res.jpg?image-optimizer=force&format=webply&width=967"
+              alt="Mobile Res"
+              className="mx-auto rounded-lg shadow-lg mb-4 max-h-48 object-cover"
+            />
+            <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-emerald-400">
+              <i className="fas fa-fingerprint"></i>
+            </div>
+            <h6 className="text-xl font-semibold">Why Your Website Must Be Mobile Responsive</h6>
+            <p className="mt-2 mb-4 text-blueGray-500">
+              Mobile-friendly sites aren’t optional—they’re essential. Here’s how to make yours responsive.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,31 +1,111 @@
-import React, { useState } from "react";
-
-
-import Navbar from "components/Navbars/AuthNavbar.js";
+/* eslint-disable */
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+import { FaStar } from "react-icons/fa";
 import Footer from "components/Footers/Footer.js";
-import team2 from "assets/img/team-2-800x800.jpg";
+import Navbar from "components/Navbars/IndexNavbar.js";
+import socket from "../socket"; // ✅ importer socket global
 
 export default function Profile() {
-  const [showAdd, setShowAdd] = useState(false);
-  const [showList, setShowList] = useState(false);
-  const [tasks, setTasks] = useState([]);
-  const [form, setForm] = useState({ title: "", description: "", budgetMin: "", budgetMax: "", category: "", skills: "" });
+  const { id } = useParams();
+  const [freelancer, setFreelancer] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!form.title || !form.description) return;
-    setTasks([...tasks, form]);
-    setForm({ title: "", description: "", budgetMin: "", budgetMax: "", category: "", skills: "" });
-    setShowAdd(false);
-    setShowList(true);
+  const [rating, setRating] = useState(0);
+  const [hover, setHover] = useState(null);
+  const [comment, setComment] = useState("");
+
+  const [notttes, setNotttes] = useState([]); // ✅ notes existantes
+
+  // Charger le freelancer + notes
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await axios.get(`http://localhost:5001/freelancer/${id}`);
+        setFreelancer(res.data);
+
+        // charger les notes du freelancer
+        const resNotte = await axios.get(
+          `http://localhost:5001/notte/${id}`,
+          { withCredentials: true }
+        );
+        setNotttes(resNotte.data);
+
+        // ✅ socket
+        socket.emit("register", { userId: id });
+        console.log("📌 Register envoyé pour :", id);
+
+        socket.on("receiveMessage", (msg) => {
+          console.log("📩 Nouveau message reçu :", msg);
+        });
+      } catch (e) {
+        console.error("Erreur profil :", e);
+      } finally {
+        setLoading(false);
+      }
+    })();
+
+    return () => {
+      socket.off("receiveMessage");
+    };
+  }, [id]);
+
+  // ✅ Envoyer une note
+  const handleSubmitNotte = async () => {
+    if (!rating) return alert("Merci de sélectionner une note !");
+    try {
+      const res = await axios.post(
+        "http://localhost:5001/notte",
+        {
+          freelancerId: id,
+          rating,
+          comment,
+        },
+        { withCredentials: true } // ⚠️ cookie JWT obligatoire
+      );
+
+      // ajouter directement dans la liste
+      setNotttes([res.data, ...notttes]);
+
+      // reset form
+      setRating(0);
+      setComment("");
+    } catch (err) {
+      console.error("Erreur ajout note :", err);
+      alert("Impossible d'envoyer l'avis.");
+    }
   };
+
+  if (loading) return <p className="text-center mt-20">Chargement...</p>;
+  if (!freelancer)
+    return (
+      <p className="text-center mt-20 text-red-500">Profil introuvable.</p>
+    );
+
+  const {
+    info = {},
+    cv,
+    specialite,
+    competences = [],
+    experiences = [],
+    certifications = [],
+    formations = [],
+    projets = [],
+  } = freelancer;
+
+  const photoUrl = info.photo
+    ? `http://localhost:5001${info.photo}`
+    : "/assets/img/default-avatar.png";
+  const cvUrl = cv ? `http://localhost:5001${cv}` : null;
 
   return (
     <>
-      <Navbar fixed />
+      <Navbar transparent />
 
       <main>
-        <section className="header relative pt-16 flex h-screen max-h-860-px items-center">
+        {/* HEADER */}
+        <section className="relative h-80 flex items-center justify-center">
           <div
             className="absolute top-0 left-0 w-full h-full bg-cover bg-center"
             style={{
@@ -33,134 +113,189 @@ export default function Profile() {
               zIndex: -1,
             }}
           />
-
-          <div className="container mx-auto z-10 relative px-4">
-            <div className="w-full md:w-8/12 lg:w-6/12 xl:w-5/12">
-              <h1 className="text-white font-bold text-5xl leading-tight mb-4">
-                From idea to execution — find the perfect freelancer to bring your project to life.
-              </h1>
-
-              <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 shadow-xl max-w-full w-full"></div>
-            </div>
-          </div>
-
-          <div
-            className="top-auto bottom-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden h-70-px"
-            style={{ transform: "translateZ(0)" }}
-          >
-            <svg
-              className="absolute bottom-0 overflow-hidden"
-              xmlns="http://www.w3.org/2000/svg"
-              preserveAspectRatio="none"
-              viewBox="0 0 2560 100"
-            >
-              <polygon
-                className="text-blueGray-200 fill-current"
-                points="2560 0 2560 100 0 100"
-              ></polygon>
-            </svg>
-          </div>
+          <div className="absolute inset-0 bg-black/40" />
+          <h1 className="text-white font-bold text-4xl md:text-5xl relative z-10">
+            LET&apos;S WORK TOGETHER
+          </h1>
         </section>
 
-        <section className="relative py-16 bg-blueGray-200">
+        {/* CONTENU */}
+        <section className="relative py-16 bg-gray-100">
           <div className="container mx-auto px-4">
-            <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg -mt-64">
-              <div className="px-6">
-                <div className="flex flex-wrap justify-center">
-                  <div className="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center">
-                    <div className="relative">
-                      <img
-                        alt="..."
-                        src={team2}
-                        className="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-150-px"
-                      />
-                    </div>
-                  </div>
-                  <div className="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center">
-                    <div className="py-6 px-3 mt-32 sm:mt-0">
-                     
-                    </div>
-                  </div>
-                  <div className="w-full lg:w-4/12 px-4 lg:order-1">
-                  
+            <div className="flex flex-col lg:flex-row gap-8">
+              {/* GAUCHE */}
+              <div className="lg:w-2/3 bg-white shadow-lg rounded-2xl p-8">
+                <div className="flex items-center gap-6 border-b pb-6">
+                  <img
+                    alt="profil"
+                    src={photoUrl}
+                    className="shadow-md rounded-full h-20 w-20 object-cover border-2 border-white"
+                  />
+                  <div>
+                    <h3 className="text-2xl font-semibold text-gray-800">
+                      {(info.prenom || "") + " " + (info.nom || "")}
+                    </h3>
+                    <p className="text-gray-500 text-lg">
+                      {specialite || "Freelancer"}
+                    </p>
+                    <p className="text-sm text-gray-400">{info.email}</p>
                   </div>
                 </div>
 
-                <div className="text-center mt-12">
-                  <h3 className="text-4xl font-semibold leading-normal text-blueGray-700 mb-2">
-                    Jenna Stones
-                  </h3>
-                  <div className="text-sm leading-normal text-blueGray-400 font-bold uppercase mb-2">
-                    <i className="fas fa-map-marker-alt mr-2 text-lg text-blueGray-400"></i>
-                    Los Angeles, California
-                  </div>
-
-                  <div className="my-10">
-                    <button
-                      onClick={() => { setShowAdd(true); setShowList(false); }}
-                      className="bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-2 rounded-lg mr-4"
-                    >➕ Add Task</button>
-                    <button
-                      onClick={() => { setShowList(true); setShowAdd(false); }}
-                      className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-6 py-2 rounded-lg"
-                    >📋 View Tasks</button>
-                  </div>
-
-                  {showAdd && (
-                    <div className="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-lg mb-10">
-                      <h2 className="text-xl font-semibold mb-4 text-gray-700">Add New Task</h2>
-                      <form onSubmit={handleSubmit} className="space-y-4">
-                        <input type="text" placeholder="Task Title" className="w-full p-2 border rounded" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />
-                        <textarea placeholder="Description" className="w-full p-2 border rounded" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} required></textarea>
-                        <div className="flex space-x-2">
-                          <input type="number" placeholder="Min Budget" className="w-1/2 p-2 border rounded" value={form.budgetMin} onChange={(e) => setForm({ ...form, budgetMin: e.target.value })} required />
-                          <input type="number" placeholder="Max Budget" className="w-1/2 p-2 border rounded" value={form.budgetMax} onChange={(e) => setForm({ ...form, budgetMax: e.target.value })} required />
-                        </div>
-                        <select className="w-full p-2 border rounded" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} required>
-                          <option value="">Select a category</option>
-                          <option value="web">Web Development</option>
-                          <option value="design">Design</option>
-                          <option value="writing">Writing</option>
-                          <option value="marketing">Marketing</option>
-                          <option value="other">Other</option>
-                        </select>
-                        <input type="text" placeholder="Required Skills" className="w-full p-2 border rounded" value={form.skills} onChange={(e) => setForm({ ...form, skills: e.target.value })} />
-                        <button type="submit" className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded w-full">Create Task</button>
-                      </form>
-                    </div>
+                <div className="mt-6 space-y-4 text-gray-700 text-sm leading-relaxed">
+                  {!!competences.length && (
+                    <p>
+                      <span className="font-semibold">Compétences:</span>{" "}
+                      {competences.join(", ")}
+                    </p>
                   )}
+                  {!!experiences.length && (
+                    <p>
+                      <span className="font-semibold">Expériences:</span>{" "}
+                      {experiences.join(" • ")}
+                    </p>
+                  )}
+                  {!!formations.length && (
+                    <p>
+                      <span className="font-semibold">Formations:</span>{" "}
+                      {formations.join(" • ")}
+                    </p>
+                  )}
+                  {!!certifications.length && (
+                    <p>
+                      <span className="font-semibold">Certifications:</span>{" "}
+                      {certifications.join(" • ")}
+                    </p>
+                  )}
+                  {!!projets.length && (
+                    <p>
+                      <span className="font-semibold">Projets:</span>{" "}
+                      {projets.join(" • ")}
+                    </p>
+                  )}
+                </div>
 
-                  {showList && (
-                    <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {tasks.map((task, index) => (
-                        <div key={index} className="bg-white p-6 rounded-xl shadow-md">
-                          <h3 className="text-xl font-bold text-gray-800 mb-2">{task.title}</h3>
-                          <p className="text-gray-600 mb-2">{task.description}</p>
-                          <p className="text-sm text-gray-500">Budget: ${task.budgetMin} - ${task.budgetMax}</p>
-                          <p className="text-sm text-gray-500">Category: {task.category}</p>
-                          <p className="text-sm text-gray-500">Skills: {task.skills}</p>
+                {cvUrl && (
+                  <div className="mt-6">
+                    <a
+                      href={cvUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg shadow"
+                    >
+                      Voir le CV
+                    </a>
+                  </div>
+                )}
+
+                {/* ✅ Liste des notes */}
+                <div className="mt-10">
+                  <h3 className="text-xl font-semibold text-gray-800 mb-4">
+                    Avis des clients
+                  </h3>
+                  {notttes.length === 0 ? (
+                    <p className="text-gray-500">Aucun avis pour l’instant.</p>
+                  ) : (
+                    <div className="space-y-4">
+                      {notttes.map((n) => (
+                        <div
+                          key={n._id}
+                          className="border p-4 rounded-lg bg-gray-50"
+                        >
+                          {/* Auteur */}
+                          <div className="flex items-center gap-3 mb-2">
+                            <img
+  src={
+    n.clientId?.user_image
+      ? `http://localhost:5001/uploads/${n.clientId.user_image}`
+      : "/assets/img/default-avatar.png"
+  }
+  alt={n.clientId?.username}
+  className="w-10 h-10 rounded-full object-cover"
+/>
+
+                            <span className="font-semibold text-gray-700">
+                              {n.clientId?.username || "Client"}
+                            </span>
+                          </div>
+
+                          {/* Étoiles */}
+                          <div className="flex items-center mb-2">
+                            {[...Array(5)].map((_, i) => (
+                              <FaStar
+                                key={i}
+                                size={18}
+                                color={i < n.rating ? "#f59e0b" : "#d1d5db"}
+                              />
+                            ))}
+                          </div>
+
+                          {/* Commentaire */}
+                          <p className="text-gray-700 text-sm">{n.comment}</p>
+                          <span className="text-xs text-gray-400">
+                            {new Date(n.createdAt).toLocaleString()}
+                          </span>
                         </div>
                       ))}
-                      {tasks.length === 0 && (
-                        <p className="col-span-2 text-center text-gray-500">No tasks yet.</p>
-                      )}
                     </div>
                   )}
                 </div>
+              </div>
 
-                <div className="mt-10 py-10 border-t border-blueGray-200 text-center">
-                  <div className="flex flex-wrap justify-center">
-                    <div className="w-full lg:w-9/12 px-4">
-                      <a href="#!" className="font-normal text-lightBlue-500">Show more</a>
-                    </div>
-                  </div>
+              {/* DROITE */}
+              <div className="lg:w-1/3 bg-white shadow-lg rounded-2xl p-8 flex flex-col">
+                <h3 className="text-xl font-semibold text-gray-800 mb-4 text-center">
+                  Évaluez ce freelancer
+                </h3>
+
+                {/* Étoiles */}
+                <div className="flex justify-center space-x-2 mb-6">
+                  {[...Array(5)].map((star, index) => {
+                    const ratingValue = index + 1;
+                    return (
+                      <label key={index}>
+                        <input
+                          type="radio"
+                          name="rating"
+                          value={ratingValue}
+                          onClick={() => setRating(ratingValue)}
+                          className="hidden"
+                        />
+                        <FaStar
+                          size={32}
+                          className="cursor-pointer transition-colors"
+                          color={
+                            ratingValue <= (hover || rating)
+                              ? "#f59e0b"
+                              : "#d1d5db"
+                          }
+                          onMouseEnter={() => setHover(ratingValue)}
+                          onMouseLeave={() => setHover(null)}
+                        />
+                      </label>
+                    );
+                  })}
                 </div>
+
+                <textarea
+                  placeholder="Laissez un commentaire..."
+                  className="w-full border rounded-lg p-3 mb-4 focus:ring-2 focus:ring-orange-400 outline-none text-sm"
+                  rows="4"
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                ></textarea>
+
+                <button
+                  onClick={handleSubmitNotte}
+                  className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg shadow w-full"
+                >
+                  Envoyer l’avis
+                </button>
               </div>
             </div>
           </div>
         </section>
       </main>
-
       <Footer />
     </>
   );

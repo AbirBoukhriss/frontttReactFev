@@ -12,14 +12,15 @@ import MachineLearning from "./views/machineLearning";
 import FindProjectPage from "views/FindProjectPage";
 import HowItWorksPage from "views/HowItWorksPage";
 import FreelancerPage from "./views/FreelancerPage";
- // ✅ export default obligatoire
+import FreelancerHome from "./views/FreelancerHome";
+import ClientHome from "./views/ClientHome";
 
 // ✅ Import des layouts
 import Admin from "layouts/Admin.js";
 import Auth from "layouts/Auth.js";
 
 // ✅ Import des vues sans layout
-import Landing from "views/Landing.js";
+import LandingPage from "views/Landing"; // ⚠️ bien relié ici
 import Profile from "views/Profile.js";
 import Index from "views/Index.js";
 
@@ -31,6 +32,8 @@ ReactDOM.render(
   <BrowserRouter>
     <Switch>
       {/* ✅ Routes des services */}
+      <Route path="/freelancer/home" component={FreelancerHome} />
+      <Route path="/client/home" component={ClientHome} />
       <Route path="/freelancer-page" component={FreelancerPage} />
       <Route path="/how-it-works" component={HowItWorksPage} />
       <Route path="/find-project-page" component={FindProjectPage} />
@@ -46,8 +49,8 @@ ReactDOM.render(
       <Route path="/auth" component={Auth} />
 
       {/* ✅ Vues sans layout */}
-      <Route path="/landing" exact component={Landing} />
-      <Route path="/profile" exact component={Profile} />
+      <Route path="/landing" exact component={LandingPage} />
+        <Route path="/profile/:id" component={Profile} />
       <Route path="/" exact component={Index} />
 
       {/* ✅ Redirection par défaut */}

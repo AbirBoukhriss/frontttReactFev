@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { useHistory, Link } from "react-router-dom";
 import axios from "axios";
-
-// Import react-toastify
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -16,50 +14,57 @@ export default function Login() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-const handleLogin = async () => {
-  const { email, password } = formData;
+  const handleLogin = async () => {
+    const { email, password } = formData;
 
-  if (!email || !password) {
-    toast.error("Veuillez remplir tous les champs.");
-    return;
-  }
-
-  try {
-    setIsSubmitting(true);
-
-    const res = await axios.post(
-      "http://localhost:5001/users/login",
-      { email, password },
-      { withCredentials: true }
-    );
-
-    const user = res.data.user;
-
-    if (!user || !user.role) {
-      toast.error("Rôle utilisateur introuvable.");
+    if (!email || !password) {
+      toast.error("Veuillez remplir tous les champs.");
       return;
     }
 
-    toast.success("Connexion réussie !");
+    try {
+      setIsSubmitting(true);
 
-    setTimeout(() => {
-      if (user.role === "client") {
-        history.push("/admin/dashboard");
-      } else if (user.role === "freelancer") {
-        history.push("/admin/settings");
-      } else {
-        toast.error("Rôle non reconnu.");
+      const res = await axios.post(
+        "http://localhost:5001/users/login",
+        { email, password },
+        { withCredentials: true }
+      );
+
+      const user = res.data.user;
+
+      if (!user || !user._id || !user.role) {
+        toast.error("Utilisateur invalide ou rôle introuvable.");
+        return;
       }
-    }, 1500);
-  } catch (error) {
-    console.error(error);
-    const msg = error.response?.data?.message || "Erreur de connexion.";
-    toast.error(msg);
-  } finally {
-    setIsSubmitting(false);
-  }
-};
 
+      // ✅ Sauvegarder les infos utiles dans localStorage
+      localStorage.setItem("userId", user._id); 
+      console.log("Logged in userId:", user._id);
+     // ID MongoDB → utile pour le chat
+      localStorage.setItem("username", user.username || ""); 
+      localStorage.setItem("role", user.role);
+
+      toast.success("Connexion réussie !");
+
+      // ✅ Redirection selon rôle
+      setTimeout(() => {
+        if (user.role === "client") {
+          history.push("/dashboard"); // ou "/client/home"
+        } else if (user.role === "freelancer") {
+          history.push("/settings"); // ou "/freelancer/home"
+        } else {
+          toast.error("Rôle non reconnu.");
+        }
+      }, 1200);
+    } catch (error) {
+      console.error(error);
+      const msg = error.response?.data?.message || "Erreur de connexion.";
+      toast.error(msg);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <>
@@ -70,7 +75,9 @@ const handleLogin = async () => {
             <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-200 border-0">
               <div className="rounded-t mb-0 px-6 py-6">
                 <div className="text-center mb-3">
-                  <h6 className="text-blueGray-500 text-sm font-bold">Sign in</h6>
+                  <h6 className="text-blueGray-500 text-sm font-bold">
+                    Sign in
+                  </h6>
                 </div>
                 <hr className="mt-6 border-b-1 border-blueGray-300" />
               </div>
@@ -85,6 +92,7 @@ const handleLogin = async () => {
                     <small>Connectez-vous avec vos identifiants</small>
                   </div>
 
+                  {/* Email */}
                   <div className="relative w-full mb-3">
                     <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">
                       Email
@@ -100,6 +108,7 @@ const handleLogin = async () => {
                     />
                   </div>
 
+                  {/* Mot de passe */}
                   <div className="relative w-full mb-3">
                     <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">
                       Mot de passe

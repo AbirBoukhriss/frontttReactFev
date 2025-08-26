@@ -5,6 +5,7 @@ import IndexDropdown from "components/Dropdowns/IndexDropdown.js";
 
 export default function Navbar(props) {
   const [navbarOpen, setNavbarOpen] = React.useState(false);
+
   return (
     <>
       <nav className="top-0 fixed z-50 w-full flex flex-wrap items-center justify-between px-2 py-2 navbar-expand-lg bg-white shadow">
@@ -13,22 +14,22 @@ export default function Navbar(props) {
           {/* Partie gauche */}
           <div className="flex items-center gap-3">
             {/* Logo */}
-            <a
-              href="http://localhost:3001/"
+            <Link
+              to="/"
               className="text-sm font-bold leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase"
             >
               <span className="text-black">FREE</span>
               <span className="text-orange-500">&</span>
               <span className="text-black">Lance</span>
-            </a>
+            </Link>
 
             {/* Home */}
-            <a
-              href="http://localhost:3001/"
+            <Link
+              to="/"
               className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300 ease-in-out"
             >
               Home
-            </a>
+            </Link>
 
             {/* Find a Freelancer */}
             <Link

@@ -6,8 +6,7 @@
   "license": "MIT",
   "dependencies": {
     "@fortawesome/fontawesome-free": "5.15.3",
-"@popperjs/core": "2.11.8",
-
+    "@popperjs/core": "2.11.8",
     "@tailwindcss/forms": "0.2.1",
     "autoprefixer": "10.2.5",
     "axios": "^1.11.0",
@@ -16,6 +15,7 @@
     "embla-carousel": "^8.6.0",
     "embla-carousel-autoplay": "^8.6.0",
     "embla-carousel-react": "^8.6.0",
+    "framer-motion": "^4.1.17",
     "gulp": "4.0.2",
     "gulp-append-prepend": "1.0.8",
     "postcss": "8.2.8",
@@ -26,6 +26,7 @@
     "react-router-dom": "^5.3.4",
     "react-scripts": "4.0.3",
     "react-toastify": "^6.0.9",
+    "socket.io-client": "^4.8.1",
     "swiper": "^11.2.10",
     "tailwindcss": "2.0.4"
   },
@@ -54,5 +55,8 @@
   },
   "optionalDependencies": {
     "typescript": "4.2.3"
+  },
+  "devDependencies": {
+    "@types/minimatch": "^6.0.0"
   }
 }
