@@ -1,3 +1,4 @@
+// pages/FreelancerHome.js
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
@@ -34,43 +35,28 @@ export default function FreelancerHome() {
     if (photoFile) data.append("photo", photoFile);
     Object.keys(formData).forEach((key) => data.append(key, formData[key]));
 
+    // ✅ Ajouter l'userId (indispensable pour éviter un doc "vide"/décorrélé)
+    const currentUserId = localStorage.getItem("userId");
+    if (currentUserId) data.append("userId", currentUserId);
+
     try {
       const res = await axios.post("http://localhost:5001/freelancer/add", data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
       alert("Profil envoyé avec succès !");
-      const id = res.data._id; // ✅ récupère bien l'id renvoyé par MongoDB
-      history.push(`/profile/${id}`); // redirige vers /profile/:id
+      const id = res.data._id;
+      history.push(`/profile/${id}`);
 
     } catch (err) {
       console.error("Erreur lors de l'envoi :", err);
-      alert("Erreur lors de l'envoi du profil.");
+      alert(err?.response?.data?.message || "Erreur lors de l'envoi du profil.");
     }
   };
 
   return (
     <div className="min-h-screen bg-blueGray-100">
-      {/* Header */}
-      <div
-        className="relative bg-cover bg-center h-96 flex items-center justify-center"
-        style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=2000&q=100')",
-        }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-b from-orange-500/80 to-orange-700/70"></div>
-        <div className="relative p-6 text-center text-white max-w-2xl">
-          <h1 className="text-5xl font-extrabold tracking-wide drop-shadow-lg">
-            Share Your Skills, Unlock Client Projects
-          </h1>
-          <p className="mt-4 text-lg opacity-90">
-            Showcase your experience to connect with clients and discover
-            exclusive opportunities tailored to your expertise.
-          </p>
-        </div>
-      </div>
-
+      {/* ... (votre UI inchangée) */}
       {/* Form */}
       <section className="bg-blueGray-100 py-16 px-4">
         <div className="max-w-4xl mx-auto bg-white shadow-xl rounded-2xl p-8">
@@ -78,7 +64,6 @@ export default function FreelancerHome() {
             Submit Your Profile
           </h2>
           <form className="space-y-6" onSubmit={handleSubmit}>
-            
             {/* Photo */}
             <div>
               <label className="block text-gray-700 font-semibold mb-2">

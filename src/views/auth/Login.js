@@ -50,9 +50,9 @@ export default function Login() {
       // ✅ Redirection selon rôle
       setTimeout(() => {
         if (user.role === "client") {
-          history.push("/dashboard"); // ou "/client/home"
+           history.push("/client/home");  // ou "/client/home"
         } else if (user.role === "freelancer") {
-          history.push("/settings"); // ou "/freelancer/home"
+          history.push("/freelancer/home"); // ou "/freelancer/home"
         } else {
           toast.error("Rôle non reconnu.");
         }

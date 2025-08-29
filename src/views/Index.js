@@ -472,9 +472,7 @@ export default function Index() {
 
       {/* Texte et étapes */}
       <div className="w-full lg:w-7/12">
-        <h2 className="text-4xl font-extrabold text-gray-800 mb-10 tracking-tight">
-          <span className="text-orange-500">How it works</span> for clients
-        </h2>
+       
 
         <div className="relative">
           {/* Ligne verticale décorative */}
@@ -511,9 +509,7 @@ export default function Index() {
                 key={i}
                 className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all relative"
               >
-                <div className={`absolute -left-9 top-6 w-10 h-10 flex items-center justify-center ${step.color} text-white rounded-full shadow-lg`}>
-                  <i className={step.icon}></i>
-                </div>
+               
                 <h4 className="text-lg font-semibold text-gray-800 mb-2">{step.title}</h4>
                 <p className="text-sm text-gray-600">{step.desc}</p>
               </div>

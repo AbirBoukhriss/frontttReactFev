@@ -113,126 +113,155 @@ export default function Profile() {
               zIndex: -1,
             }}
           />
-          <div className="absolute inset-0 bg-black/40" />
-          <h1 className="text-white font-bold text-4xl md:text-5xl relative z-10">
+          <div className="absolute inset-0 bg-black/50" />
+          <h1 className="text-white font-bold text-4xl md:text-5xl relative z-10 drop-shadow-lg">
             LET&apos;S WORK TOGETHER
           </h1>
         </section>
 
         {/* CONTENU */}
-        <section className="relative py-16 bg-gray-100">
+        <section className="relative py-20 bg-gradient-to-br from-gray-50 to-gray-100">
           <div className="container mx-auto px-4">
-            <div className="flex flex-col lg:flex-row gap-8">
+            <div className="flex flex-col lg:flex-row gap-10">
               {/* GAUCHE */}
-              <div className="lg:w-2/3 bg-white shadow-lg rounded-2xl p-8">
+              <div className="lg:w-2/3 bg-white/90 backdrop-blur-md shadow-xl rounded-2xl p-8 transition hover:shadow-2xl">
+                {/* Infos perso */}
                 <div className="flex items-center gap-6 border-b pb-6">
                   <img
                     alt="profil"
                     src={photoUrl}
-                    className="shadow-md rounded-full h-20 w-20 object-cover border-2 border-white"
+                    className="shadow-lg rounded-full h-20 w-20 object-cover border-2 border-orange-400"
                   />
                   <div>
-                    <h3 className="text-2xl font-semibold text-gray-800">
+                    <h3 className="text-2xl font-bold text-gray-800">
                       {(info.prenom || "") + " " + (info.nom || "")}
                     </h3>
-                    <p className="text-gray-500 text-lg">
+                    <p className="text-orange-500 font-medium text-lg">
                       {specialite || "Freelancer"}
                     </p>
-                    <p className="text-sm text-gray-400">{info.email}</p>
+                    <p className="text-sm text-gray-500">{info.email}</p>
                   </div>
                 </div>
 
-                <div className="mt-6 space-y-4 text-gray-700 text-sm leading-relaxed">
+                {/* Détails */}
+                <div className="mt-6 space-y-6 text-gray-700">
                   {!!competences.length && (
-                    <p>
-                      <span className="font-semibold">Compétences:</span>{" "}
-                      {competences.join(", ")}
-                    </p>
+                    <div>
+                      <span className="font-semibold text-gray-800">
+                        Compétences:
+                      </span>
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {competences.map((c, i) => (
+                          <span
+                            key={i}
+                            className="px-3 py-1 bg-orange-100 text-orange-700 text-sm rounded-full shadow-sm"
+                          >
+                            {c}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
                   )}
+
                   {!!experiences.length && (
-                    <p>
-                      <span className="font-semibold">Expériences:</span>{" "}
-                      {experiences.join(" • ")}
-                    </p>
+                    <div>
+                      <span className="font-semibold text-gray-800">
+                        Expériences:
+                      </span>
+                      <ul className="mt-2 list-disc list-inside text-sm text-gray-600 space-y-1">
+                        {experiences.map((exp, i) => (
+                          <li key={i}>{exp}</li>
+                        ))}
+                      </ul>
+                    </div>
                   )}
+
                   {!!formations.length && (
-                    <p>
-                      <span className="font-semibold">Formations:</span>{" "}
-                      {formations.join(" • ")}
-                    </p>
+                    <div>
+                      <span className="font-semibold text-gray-800">
+                        Formations:
+                      </span>
+                      <p className="mt-1 text-sm">{formations.join(" • ")}</p>
+                    </div>
                   )}
+
                   {!!certifications.length && (
-                    <p>
-                      <span className="font-semibold">Certifications:</span>{" "}
-                      {certifications.join(" • ")}
-                    </p>
+                    <div>
+                      <span className="font-semibold text-gray-800">
+                        Certifications:
+                      </span>
+                      <p className="mt-1 text-sm">
+                        {certifications.join(" • ")}
+                      </p>
+                    </div>
                   )}
+
                   {!!projets.length && (
-                    <p>
-                      <span className="font-semibold">Projets:</span>{" "}
-                      {projets.join(" • ")}
-                    </p>
+                    <div>
+                      <span className="font-semibold text-gray-800">
+                        Projets:
+                      </span>
+                      <p className="mt-1 text-sm">{projets.join(" • ")}</p>
+                    </div>
                   )}
                 </div>
 
+                {/* Bouton CV */}
                 {cvUrl && (
-                  <div className="mt-6">
+                  <div className="mt-8">
                     <a
                       href={cvUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-block bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg shadow"
+                      className="inline-block bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-xl shadow-lg font-medium transition"
                     >
-                      Voir le CV
+                      📄 Voir le CV
                     </a>
                   </div>
                 )}
 
-                {/* ✅ Liste des notes */}
-                <div className="mt-10">
-                  <h3 className="text-xl font-semibold text-gray-800 mb-4">
+                {/* Avis clients */}
+                <div className="mt-12">
+                  <h3 className="text-2xl font-semibold text-gray-800 mb-6">
                     Avis des clients
                   </h3>
                   {notttes.length === 0 ? (
                     <p className="text-gray-500">Aucun avis pour l’instant.</p>
                   ) : (
-                    <div className="space-y-4">
+                    <div className="space-y-6">
                       {notttes.map((n) => (
                         <div
                           key={n._id}
-                          className="border p-4 rounded-lg bg-gray-50"
+                          className="p-5 bg-white border rounded-xl shadow-sm hover:shadow-md transition"
                         >
-                          {/* Auteur */}
-                          <div className="flex items-center gap-3 mb-2">
-                            <img
+                          <div className="flex items-center gap-3 mb-3">
+          <img
   src={
     n.clientId?.user_image
-      ? `http://localhost:5001/uploads/${n.clientId.user_image}`
+      ? `http://localhost:5001${n.clientId.user_image}`
       : "/assets/img/default-avatar.png"
   }
-  alt={n.clientId?.username}
-  className="w-10 h-10 rounded-full object-cover"
+  alt="client"
+  className="w-10 h-10 rounded-full object-cover border"
 />
 
-                            <span className="font-semibold text-gray-700">
-                              {n.clientId?.username || "Client"}
-                            </span>
+                            <div>
+                              <p className="font-semibold text-gray-800">
+                                {n.clientId?.username || "Client"}
+                              </p>
+                              <div className="flex">
+                                {[...Array(5)].map((_, i) => (
+                                  <FaStar
+                                    key={i}
+                                    size={18}
+                                    color={i < n.rating ? "#f59e0b" : "#d1d5db"}
+                                  />
+                                ))}
+                              </div>
+                            </div>
                           </div>
-
-                          {/* Étoiles */}
-                          <div className="flex items-center mb-2">
-                            {[...Array(5)].map((_, i) => (
-                              <FaStar
-                                key={i}
-                                size={18}
-                                color={i < n.rating ? "#f59e0b" : "#d1d5db"}
-                              />
-                            ))}
-                          </div>
-
-                          {/* Commentaire */}
-                          <p className="text-gray-700 text-sm">{n.comment}</p>
-                          <span className="text-xs text-gray-400">
+                          <p className="text-gray-600 italic">{n.comment}</p>
+                          <span className="text-xs text-gray-400 mt-2 block">
                             {new Date(n.createdAt).toLocaleString()}
                           </span>
                         </div>
@@ -242,15 +271,15 @@ export default function Profile() {
                 </div>
               </div>
 
-              {/* DROITE */}
-              <div className="lg:w-1/3 bg-white shadow-lg rounded-2xl p-8 flex flex-col">
-                <h3 className="text-xl font-semibold text-gray-800 mb-4 text-center">
-                  Évaluez ce freelancer
+              {/* DROITE - Évaluation */}
+              <div className="lg:w-1/3 bg-white/90 backdrop-blur-md shadow-xl rounded-2xl p-8 flex flex-col sticky top-24 h-fit">
+                <h3 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
+                  ⭐ Évaluez ce freelancer
                 </h3>
 
                 {/* Étoiles */}
                 <div className="flex justify-center space-x-2 mb-6">
-                  {[...Array(5)].map((star, index) => {
+                  {[...Array(5)].map((_, index) => {
                     const ratingValue = index + 1;
                     return (
                       <label key={index}>
@@ -263,7 +292,7 @@ export default function Profile() {
                         />
                         <FaStar
                           size={32}
-                          className="cursor-pointer transition-colors"
+                          className="cursor-pointer transition transform hover:scale-110"
                           color={
                             ratingValue <= (hover || rating)
                               ? "#f59e0b"
@@ -278,8 +307,8 @@ export default function Profile() {
                 </div>
 
                 <textarea
-                  placeholder="Laissez un commentaire..."
-                  className="w-full border rounded-lg p-3 mb-4 focus:ring-2 focus:ring-orange-400 outline-none text-sm"
+                  placeholder="Votre commentaire..."
+                  className="w-full border rounded-xl p-3 mb-4 focus:ring-2 focus:ring-orange-400 outline-none text-sm shadow-sm"
                   rows="4"
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
@@ -287,9 +316,9 @@ export default function Profile() {
 
                 <button
                   onClick={handleSubmitNotte}
-                  className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg shadow w-full"
+                  className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-xl shadow-lg w-full font-semibold transition"
                 >
-                  Envoyer l’avis
+                  🚀 Envoyer l’avis
                 </button>
               </div>
             </div>

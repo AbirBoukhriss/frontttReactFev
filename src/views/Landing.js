@@ -1,3 +1,4 @@
+// pages/LandingPage.js
 /* eslint-disable */
 import React, { useEffect, useState } from "react";
 import axios from "axios";
@@ -5,7 +6,7 @@ import { FaStar } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Navbar from "components/Navbars/IndexNavbar";
 import ChatBox from "components/ChatBox";
-import socket, { initSocket } from "../socket";
+import { initSocket } from "../socket";
 
 export default function LandingPage() {
   const [freelancers, setFreelancers] = useState([]);
@@ -19,7 +20,18 @@ export default function LandingPage() {
     const fetchFreelancers = async () => {
       try {
         const res = await axios.get("http://localhost:5001/freelancer/allFreel");
-        setFreelancers(res.data);
+        // (Optionnel front) Filtrage safe : cache les entrées totalement vides
+        const cleaned = (res.data || []).filter(f =>
+          (f?.info?.nom?.trim()) ||
+          (f?.info?.prenom?.trim()) ||
+          (Array.isArray(f?.formations) && f.formations.length) ||
+          (Array.isArray(f?.competences) && f.competences.length) ||
+          (Array.isArray(f?.experiences) && f.experiences.length) ||
+          (Array.isArray(f?.certifications) && f.certifications.length) ||
+          (f?.specialite?.trim()) ||
+          f?.cv || f?.info?.photo
+        );
+        setFreelancers(cleaned);
       } catch (err) {
         console.error("Erreur lors du chargement :", err);
       }
@@ -42,9 +54,9 @@ export default function LandingPage() {
                 <img
                   src={
                     f.info?.photo
-                      ? f.info.photo.startsWith("http")
+                      ? (f.info.photo.startsWith("http")
                         ? f.info.photo
-                        : `http://localhost:5001${f.info.photo}`
+                        : `http://localhost:5001${f.info.photo}`)
                       : "/default-avatar.png"
                   }
                   alt={`${f.info?.nom || ""} ${f.info?.prenom || ""}`}
@@ -56,17 +68,21 @@ export default function LandingPage() {
                   <h5 className="card-title fw-bold">
                     {f.info?.nom} {f.info?.prenom}
                   </h5>
-                  <p className="text-muted mb-2">{f.specialite || "—"}</p>
 
-                  {/* Compétences et expériences */}
+                  {/* Spécialité en orange */}
+                  <p className="mb-2 text-orange-500 fw-semibold">
+                    {f.specialite || "—"}
+                  </p>
+
+                  {/* Formations & Certifications avec fallback */}
                   <div className="text-start mb-2">
                     <p>
-                      <strong>Compétences :</strong>{" "}
-                      {f.competences?.join(", ") || "—"}
+                      <strong>Formations :</strong>{" "}
+                      {(f.formations?.length ? f.formations : f.competences)?.join(", ") || "—"}
                     </p>
                     <p>
-                      <strong>Expériences :</strong>{" "}
-                      {f.experiences?.join(", ") || "—"}
+                      <strong>Certifications :</strong>{" "}
+                      {(f.certifications?.length ? f.certifications : f.experiences)?.join(", ") || "—"}
                     </p>
                   </div>
 
@@ -82,16 +98,14 @@ export default function LandingPage() {
                     </a>
                   )}
 
-                  {/* Étoiles → remplies (jaunes) et vides (jaune clair transparent) */}
+                  {/* Étoiles */}
                   <div className="mb-3 d-flex justify-content-center">
                     {[...Array(5)].map((_, i) => (
                       <FaStar
                         key={i}
                         size={20}
                         className={`mx-1 ${
-                          i < (f.rating || 0)
-                            ? "text-warning" // Étoiles remplies
-                            : "text-warning opacity-25" // Étoiles vides
+                          i < (f.rating || 0) ? "text-warning" : "text-warning opacity-25"
                         }`}
                       />
                     ))}
