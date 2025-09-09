@@ -1,157 +1,180 @@
 /* eslint-disable */
 import React, { useEffect, useState, useRef } from "react";
-import socket from "../socket";
-import VideoCall from "./VideoCall";
+import axios from "axios";
+import { getSocket } from "../socket";
 
-export default function ChatBox({ userId, receiverId, receiverName, onClose }) {
+function ChatBox({ userId, receiverId, receiverName, onClose }) {
   const [messages, setMessages] = useState([]);
-  const [text, setText] = useState("");
-  const [videoCallOpen, setVideoCallOpen] = useState(false);
+  const [newMessage, setNewMessage] = useState("");
   const messagesEndRef = useRef(null);
 
-  // Charger l'historique
+  // Scroll automatique vers le bas
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  // Charger l'historique des messages
   useEffect(() => {
-    const fetchMessages = async () => {
+    async function fetchMessages() {
       try {
-        const res = await fetch(
+        const res = await axios.get(
           `http://localhost:5001/message/${userId}/${receiverId}`
         );
-        const data = await res.json();
-        setMessages(Array.isArray(data) ? data : []);
+        setMessages(res.data);
       } catch (err) {
-        console.error("Erreur fetchMessages:", err);
-        setMessages([]);
+        console.error("❌ Erreur chargement messages:", err);
       }
-    };
+    }
     fetchMessages();
   }, [userId, receiverId]);
 
-  // Réception temps réel
+  // Écouter les messages en temps réel
   useEffect(() => {
-    const handleReceive = (msg) => {
+    const socket = getSocket();
+    if (!socket) return;
+
+    const handleReceiveMessage = (msg) => {
+      // On n'ajoute que si c'est le chat ouvert
       if (
         (msg.senderId === receiverId && msg.receiverId === userId) ||
         (msg.senderId === userId && msg.receiverId === receiverId)
       ) {
+        console.log("📩 Message reçu ChatBox :", msg);
         setMessages((prev) => [...prev, msg]);
       }
     };
-    socket.on("receiveMessage", handleReceive);
-    return () => socket.off("receiveMessage", handleReceive);
+
+    socket.on("receiveMessage", handleReceiveMessage);
+    return () => socket.off("receiveMessage", handleReceiveMessage);
   }, [userId, receiverId]);
 
-  // Scroll auto
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
-  // Envoyer un message
+  // Envoi d'un message
   const sendMessage = () => {
-    if (!text.trim()) return;
+    if (!newMessage.trim()) return;
+    const socket = getSocket();
+    const msgData = { senderId: userId, receiverId, message: newMessage };
+    console.log("✉️ Envoi message ChatBox :", msgData);
 
-    const msg = { senderId: userId, receiverId, text };
-
-    // affichage immédiat
-    setMessages((prev) => [...prev, msg]);
-
-    // envoi via socket → sauvegarde + diffusion
-    socket.emit("sendMessage", msg);
-
-    setText("");
+    socket.emit("sendMessage", msgData);
+    setNewMessage("");
   };
+
+  useEffect(scrollToBottom, [messages]);
 
   return (
     <div
-      className="card shadow-lg position-fixed d-flex flex-column"
       style={{
-        bottom: "20px",
-        right: "20px",
-        width: "380px",
-        height: "480px",
-        zIndex: 9999,
-        borderRadius: "12px",
+        position: "fixed",
+        bottom: "1rem",
+        right: "1rem",
+        width: "350px",
+        backgroundColor: "white",
+        border: "1px solid #ccc",
+        borderRadius: "8px",
+        display: "flex",
+        flexDirection: "column",
+        boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
       }}
     >
       {/* Header */}
-      <div className="card-header bg-warning text-white d-flex justify-content-between align-items-center">
-        <strong>💬 {receiverName}</strong>
-        <div className="d-flex gap-2">
-          <button
-            className="btn btn-sm btn-info text-white"
-            onClick={() => setVideoCallOpen(true)}
-          >
-            📹
-          </button>
-          <button className="btn btn-sm btn-danger" onClick={onClose}>
-            ✖
-          </button>
-        </div>
+      <div
+        style={{
+          backgroundColor: "#f59e0b",
+          color: "white",
+          padding: "0.5rem 1rem",
+          borderTopLeftRadius: "8px",
+          borderTopRightRadius: "8px",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <h3 style={{ margin: 0, fontWeight: "bold" }}>
+          Chat avec {receiverName}
+        </h3>
+        <button
+          onClick={onClose}
+          style={{
+            fontWeight: "bold",
+            background: "none",
+            border: "none",
+            color: "white",
+            cursor: "pointer",
+          }}
+        >
+          ✖
+        </button>
       </div>
 
       {/* Messages */}
       <div
-        className="card-body overflow-auto bg-light flex-grow-1"
-        style={{ fontSize: "14px", padding: "10px" }}
+        style={{
+          flex: 1,
+          padding: "1rem",
+          overflowY: "auto",
+        }}
       >
-        {messages.length === 0 && (
-          <p className="text-center text-muted">Aucun message</p>
-        )}
-
         {messages.map((m, i) => (
           <div
-            key={m._id || i}
-            className={`d-flex mb-2 ${
-              m.senderId === userId
-                ? "justify-content-end"
-                : "justify-content-start"
-            }`}
+            key={i}
+            style={{
+              padding: "0.5rem",
+              borderRadius: "6px",
+              maxWidth: "75%",
+              marginBottom: "0.5rem",
+              alignSelf: m.senderId === userId ? "flex-end" : "flex-start",
+              backgroundColor: m.senderId === userId ? "#fbbf24" : "#e5e7eb",
+              color: m.senderId === userId ? "white" : "black",
+            }}
           >
-            <div
-              className={`px-3 py-2 rounded-3 shadow-sm ${
-                m.senderId === userId
-                  ? "bg-primary text-white"
-                  : "bg-white border text-dark"
-              }`}
-              style={{
-                maxWidth: "75%",
-                wordBreak: "break-word",
-                whiteSpace: "pre-wrap",
-                lineHeight: "1.4",
-              }}
-            >
-              {m.text}
-            </div>
+            <strong>
+              {m.senderId === userId ? "Vous" : receiverName}:
+            </strong>{" "}
+            {m.message}
           </div>
         ))}
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Footer */}
-      <div className="card-footer d-flex gap-2">
+      {/* Input */}
+      <div
+        style={{
+          display: "flex",
+          borderTop: "1px solid #ccc",
+          padding: "0.5rem",
+        }}
+      >
         <input
           type="text"
-          className="form-control"
-          value={text}
+          style={{
+            flex: 1,
+            border: "1px solid #ccc",
+            borderRadius: "6px",
+            padding: "0.5rem",
+            marginRight: "0.5rem",
+          }}
           placeholder="Écrire un message..."
-          onChange={(e) => setText(e.target.value)}
+          value={newMessage}
+          onChange={(e) => setNewMessage(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && sendMessage()}
         />
         <button
-          className="btn btn-warning text-white fw-bold"
           onClick={sendMessage}
+          style={{
+            backgroundColor: "#f59e0b",
+            color: "white",
+            border: "none",
+            borderRadius: "6px",
+            padding: "0.5rem 1rem",
+            fontWeight: "bold",
+            cursor: "pointer",
+          }}
         >
-          ➤
+          Envoyer
         </button>
       </div>
-
-      {/* Video Call */}
-      {videoCallOpen && (
-        <VideoCall
-          userId={userId}
-          receiverId={receiverId}
-          onClose={() => setVideoCallOpen(false)}
-        />
-      )}
     </div>
   );
 }
+
+export default ChatBox;

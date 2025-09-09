@@ -1,19 +1,33 @@
 import { io } from "socket.io-client";
 
-const socket = io("http://localhost:5001", {
-  withCredentials: true,
-  autoConnect: false,
-});
+let socket;
 
 export const initSocket = (userId) => {
-  if (!socket.connected) {
-    socket.connect();
+  if (!socket) {
+    socket = io("http://localhost:5001", {
+      transports: ["websocket"],
+      withCredentials: true,
+    });
+
     socket.on("connect", () => {
-      console.log("🔗 Socket connecté :", socket.id);
+      console.log("✅ Socket connecté :", socket.id);
+      console.log("🔹 Registering userId:", userId);
       socket.emit("register", { userId });
-      console.log("📌 Register envoyé :", userId);
+    });
+
+    socket.on("disconnect", () => {
+      console.log("❌ Socket déconnecté :", socket.id);
+    });
+
+    socket.on("receiveMessage", (msg) => {
+      console.log("🟢 Nouveau message reçu via socket :", msg);
     });
   }
+  return socket;
 };
 
-export default socket;
+export const getSocket = () => socket;
+
+// ✅ Assign to a variable before default export
+const socketService = { initSocket, getSocket };
+export default socketService;

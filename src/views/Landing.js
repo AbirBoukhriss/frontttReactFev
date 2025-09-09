@@ -6,8 +6,7 @@ import { FaStar } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Navbar from "components/Navbars/IndexNavbar";
 import ChatBox from "components/ChatBox";
-import { initSocket } from "../socket";
-
+import { initSocket, getSocket } from "../socket";
 export default function LandingPage() {
   const [freelancers, setFreelancers] = useState([]);
   const [openChat, setOpenChat] = useState(null);
@@ -38,6 +37,34 @@ export default function LandingPage() {
     };
     fetchFreelancers();
   }, [currentUserId]);
+
+
+useEffect(() => {
+  const socket = getSocket();
+  if (!socket) return;
+
+  const handleReceiveMessage = (msg) => {
+    console.log("🟢 Message reçu via socket :", msg);
+
+    // Si le message est pour l'utilisateur courant
+    if (msg.receiverId === currentUserId) {
+      // Ouvre automatiquement le chat si ce n’est pas déjà ouvert
+      setOpenChat((prev) => {
+        if (prev?.receiverId === msg.senderId) {
+          return prev; // déjà ouvert
+        } else {
+          return {
+            receiverId: msg.senderId,
+            receiverName: msg.senderName || "Inconnu",
+          };
+        }
+      });
+    }
+  };
+
+  socket.on("receiveMessage", handleReceiveMessage);
+  return () => socket.off("receiveMessage", handleReceiveMessage);
+}, [currentUserId]);
 
   return (
     <>
@@ -123,9 +150,10 @@ export default function LandingPage() {
                       className="btn btn-warning flex-fill text-white rounded-3 fw-bold"
                       onClick={() =>
                         setOpenChat({
-                          receiverId: f._id,
-                          receiverName: `${f.info?.nom || ""} ${f.info?.prenom || ""}`,
-                        })
+ receiverId: f.userId, // <-- ici le vrai userId utilisé pour socket
+  receiverName: `${f.info?.nom || ""} ${f.info?.prenom || ""}`,
+})
+
                       }
                     >
                       Contacter

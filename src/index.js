@@ -14,7 +14,7 @@ import HowItWorksPage from "views/HowItWorksPage";
 import FreelancerPage from "./views/FreelancerPage";
 import FreelancerHome from "./views/FreelancerHome";
 import ClientHome from "./views/ClientHome";
-
+import MessagesRecus from "./components/MessagesRecus";
 // ✅ Import des layouts
 import Admin from "layouts/Admin.js";
 import Auth from "layouts/Auth.js";
@@ -43,6 +43,7 @@ ReactDOM.render(
       <Route path="/machine-learning" component={MachineLearning} />
       <Route path="/web-development" component={WebDevelopment} />
       <Route path="/designer" component={Designer} />
+<Route path="/messages-recues" element={<MessagesRecus />} />
 
       {/* ✅ Layouts */}
       <Route path="/admin" component={Admin} />
