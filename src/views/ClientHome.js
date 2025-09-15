@@ -1,7 +1,9 @@
+/* eslint-disable */
 import React, { useState } from "react";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
-import { FaUser, FaHeading, FaRegCalendarAlt, FaTags, FaFileImage } from "react-icons/fa";
+import { User, Heading, Calendar, Tags, Image } from "lucide-react";
+import "./NouvelleRuche.css"; // 🎨 your custom styles
 
 export default function ClientHome() {
   const [form, setForm] = useState({
@@ -14,120 +16,354 @@ export default function ClientHome() {
     clientPhoto: null,
   });
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [preview, setPreview] = useState(null); // 👀 for showing the uploaded photo
   const history = useHistory();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const formData = new FormData();
-      Object.keys(form).forEach((key) => {
-        if (form[key]) formData.append(key, form[key]);
-      });
+  const categories = [
+    { value: "data-scientist", label: "Data Scientist" },
+    { value: "machine-learning", label: "Machine Learning" },
+    { value: "designer", label: "Designer" },
+    { value: "ai", label: "Artificial Intelligence" },
+    { value: "software-development", label: "Software Development" },
+    { value: "web-development", label: "Web Development" },
+  ];
 
-      await axios.post("http://localhost:5001/task/addTask", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsSubmitting(true);
 
-      history.push("/find-project-page");
-    } catch (error) {
-      console.error("Erreur ajout tâche:", error);
+  try {
+    const formData = new FormData();
+    Object.keys(form).forEach((key) => {
+      if (form[key]) formData.append(key, form[key]);
+    });
+
+    // ✅ Récupérer l'ID depuis localStorage
+    const clientId = localStorage.getItem("userId");
+    if (!clientId) {
+      alert("❌ Aucun clientId trouvé, connecte-toi d'abord !");
+      setIsSubmitting(false);
+      return;
     }
-  };
+
+    formData.append("clientId", clientId);
+
+    await axios.post("http://localhost:5001/task/addTask", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    alert("✅ Tâche ajoutée avec succès !");
+    history.push("/dashboard"); // redirection après ajout
+  } catch (error) {
+    console.error("❌ Error adding task:", error);
+    alert("Erreur lors de l'ajout de la tâche !");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
+
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-orange-100 to-orange-200 p-6">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-lg space-y-5"
-      >
-        <h2 className="text-2xl font-bold text-center text-orange-600">
-          🚀 Ajouter une Tâche
-        </h2>
+    <div className="ruche-container">
+      {/* Decorative Hexagons */}
+      <div className="hexagon hex1">⬢</div>
+      <div className="hexagon hex2">⬢</div>
+      <div className="hexagon hex3">⬢</div>
 
-        {/* Nom client */}
-        <div className="flex items-center border rounded-lg px-3 py-2">
-          <FaUser className="text-gray-400 mr-2" />
+      {/* Logo + Title */}
+      <div className="text-center mb-5">
+        <div className="logo-box shadow-sm">
+          <span className="hex-orange">⬢</span>
+          <span className="plus">+</span>
+          <span className="hex-yellow">⬢</span>
+        </div>
+        <h1 className="ruche-title">New Project</h1>
+      </div>
+
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="ruche-form shadow">
+        {/* Client name */}
+        <div className="mb-4">
+          <label className="form-label fw-semibold d-flex align-items-center text-orange">
+            <span
+              style={{
+                backgroundColor: "#fedaa0ff",
+                padding: "4px 6px",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: "4px",
+              }}
+            >
+              <User size={18} color="#e86c06ff" />
+            </span>{" "}
+            Client Name
+          </label>
           <input
             type="text"
-            placeholder="Nom client"
-            className="w-full outline-none"
+            name="clientName"
+            value={form.clientName}
             onChange={(e) => setForm({ ...form, clientName: e.target.value })}
+            placeholder="Who is your client?"
+            className="form-control custom-input orange-border"
+            style={{
+              border: "2px solid orange",
+              borderRadius: "8px",
+              padding: "8px 12px",
+              outline: "none",
+              transition: "border 0.3s, box-shadow 0.3s",
+            }}
+            onFocus={(e) =>
+              (e.target.style.boxShadow = "0 0 5px rgba(255, 165, 0, 0.5)")
+            }
+            onBlur={(e) => (e.target.style.boxShadow = "none")}
           />
         </div>
 
-        {/* Titre */}
-        <div className="flex items-center border rounded-lg px-3 py-2">
-          <FaHeading className="text-gray-400 mr-2" />
+        {/* Project title */}
+        <div className="mb-4">
+          <label className="form-label fw-semibold d-flex align-items-center text-warning">
+            <span
+              style={{
+                backgroundColor: "#fedaa0ff",
+                padding: "4px 6px",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: "4px",
+              }}
+            >
+              <Heading size={18} className="me-2" color="#e86c06ff" />
+            </span>
+            Project Title
+          </label>
           <input
             type="text"
-            placeholder="Titre"
-            className="w-full outline-none"
+            name="titre"
+            value={form.titre}
             onChange={(e) => setForm({ ...form, titre: e.target.value })}
+            placeholder="Give it a catchy name!"
+            className="form-control custom-input yellow-border"
+            style={{
+              border: "2px solid orange",
+              borderRadius: "8px",
+              padding: "8px 12px",
+              outline: "none",
+              transition: "border 0.3s, box-shadow 0.3s",
+            }}
+            onFocus={(e) =>
+              (e.target.style.boxShadow = "0 0 5px rgba(255, 165, 0, 0.5)")
+            }
+            onBlur={(e) => (e.target.style.boxShadow = "none")}
           />
         </div>
 
-        {/* Description */}
-        <textarea
-          placeholder="Description"
-          className="w-full p-3 border rounded-lg resize-none"
-          rows="3"
-          onChange={(e) => setForm({ ...form, description: e.target.value })}
-        ></textarea>
+        {/* Project description */}
+        <div className="mb-4">
+          <label className="form-label fw-semibold text-secondary">
+            Project Description
+          </label>
+          <textarea
+            name="description"
+            value={form.description}
+            onChange={(e) =>
+              setForm({ ...form, description: e.target.value })
+            }
+            placeholder="Tell us about your vision"
+            rows="4"
+            className="form-control custom-input orange-border"
+            style={{
+              border: "2px solid orange",
+              borderRadius: "8px",
+              padding: "8px 12px",
+              outline: "none",
+              transition: "border 0.3s, box-shadow 0.3s",
+            }}
+            onFocus={(e) =>
+              (e.target.style.boxShadow = "0 0 5px rgba(255, 165, 0, 0.5)")
+            }
+            onBlur={(e) => (e.target.style.boxShadow = "none")}
+          />
+        </div>
 
         {/* Dates */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="flex items-center border rounded-lg px-3 py-2">
-            <FaRegCalendarAlt className="text-gray-400 mr-2" />
+        <div className="row">
+          <div className="col-md-6 mb-3">
+            <label className="form-label fw-semibold d-flex align-items-center text-orange">
+              <span
+                style={{
+                  backgroundColor: "#fedaa0ff",
+                  padding: "4px 6px",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: "4px",
+                }}
+              >
+                <Calendar size={18} className="me-2" color="#e86c06ff" />
+              </span>{" "}
+              Start Date
+            </label>
             <input
               type="date"
-              className="w-full outline-none"
-              onChange={(e) => setForm({ ...form, date_debut: e.target.value })}
+              value={form.date_debut}
+              onChange={(e) =>
+                setForm({ ...form, date_debut: e.target.value })
+              }
+              className="form-control custom-input orange-border"
+              style={{
+                border: "2px solid orange",
+                borderRadius: "8px",
+                padding: "8px 12px",
+                outline: "none",
+                transition: "border 0.3s, box-shadow 0.3s",
+              }}
+              onFocus={(e) =>
+                (e.target.style.boxShadow = "0 0 5px rgba(255, 165, 0, 0.5)")
+              }
+              onBlur={(e) => (e.target.style.boxShadow = "none")}
             />
           </div>
-          <div className="flex items-center border rounded-lg px-3 py-2">
-            <FaRegCalendarAlt className="text-gray-400 mr-2" />
+          <div className="col-md-6 mb-3">
+            <label className="form-label fw-semibold d-flex align-items-center text-orange">
+              <span
+                style={{
+                  backgroundColor: "#fedaa0ff",
+                  padding: "4px 6px",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: "4px",
+                }}
+              >
+                <Calendar size={18} className="me-2" color="#e86c06ff" />
+              </span>{" "}
+              End Date
+            </label>
             <input
               type="date"
-              className="w-full outline-none"
-              onChange={(e) => setForm({ ...form, date_fin: e.target.value })}
+              value={form.date_fin}
+              onChange={(e) =>
+                setForm({ ...form, date_fin: e.target.value })
+              }
+              className="form-control custom-input orange-border"
+              style={{
+                border: "2px solid orange",
+                borderRadius: "8px",
+                padding: "8px 12px",
+                outline: "none",
+                transition: "border 0.3s, box-shadow 0.3s",
+              }}
+              onFocus={(e) =>
+                (e.target.style.boxShadow = "0 0 5px rgba(255, 165, 0, 0.5)")
+              }
+              onBlur={(e) => (e.target.style.boxShadow = "none")}
             />
           </div>
         </div>
 
-        {/* Catégorie */}
-        <div className="flex items-center border rounded-lg px-3 py-2">
-          <FaTags className="text-gray-400 mr-2" />
+        {/* Category */}
+        <div className="mb-4">
+          <label className="form-label fw-semibold d-flex align-items-center text-orange">
+            <span
+              style={{
+                backgroundColor: "#fedaa0ff",
+                padding: "4px 6px",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: "4px",
+              }}
+            >
+              <Tags size={18} className="me-2" color="#e86c06ff" />
+            </span>{" "}
+            Category
+          </label>
           <select
-            className="w-full outline-none"
-            onChange={(e) => setForm({ ...form, categorie: e.target.value })}
+            value={form.categorie}
+            onChange={(e) =>
+              setForm({ ...form, categorie: e.target.value })
+            }
+            className="form-control custom-input orange-border"
+            style={{
+              border: "2px solid orange",
+              borderRadius: "8px",
+              padding: "8px 12px",
+              outline: "none",
+              transition: "border 0.3s, box-shadow 0.3s",
+            }}
+            onFocus={(e) =>
+              (e.target.style.boxShadow = "0 0 5px rgba(255, 165, 0, 0.5)")
+            }
+            onBlur={(e) => (e.target.style.boxShadow = "none")}
           >
-            <option value="">-- Choisir une catégorie --</option>
-            <option value="data-scientist">Data Scientist</option>
-            <option value="machine-learning">Machine Learning</option>
-            <option value="designer">Designer</option>
-            <option value="ai">Intelligence Artificielle</option>
-            <option value="software-development">Software Development</option>
-            <option value="web-development">Web Development</option>
+            <option value="">Choose your specialty</option>
+            {categories.map((c) => (
+              <option key={c.value} value={c.value}>
+                {c.label}
+              </option>
+            ))}
           </select>
         </div>
 
-        {/* Photo */}
-        <div className="flex items-center border rounded-lg px-3 py-2">
-          <FaFileImage className="text-gray-400 mr-2" />
+        {/* Upload image */}
+        <div className="mb-4">
+          <label className="form-label fw-semibold d-flex align-items-center text-orange">
+            <span
+              style={{
+                backgroundColor: "#fedaa0ff",
+                padding: "4px 6px",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: "4px",
+              }}
+            >
+              <Image size={18} className="me-2" color="#e86c06ff" />
+            </span>{" "}
+            Project Image
+          </label>
           <input
             type="file"
             accept="image/*"
-            className="w-full outline-none"
-            onChange={(e) => setForm({ ...form, clientPhoto: e.target.files[0] })}
+            className="form-control custom-input orange-border"
+            onChange={(e) => {
+              const file = e.target.files?.[0] || null;
+              setForm({ ...form, clientPhoto: file });
+              if (file) {
+                setPreview(URL.createObjectURL(file));
+              } else {
+                setPreview(null);
+              }
+            }}
+            style={{
+              border: "2px solid orange",
+              borderRadius: "8px",
+              padding: "8px 12px",
+              outline: "none",
+              transition: "border 0.3s, box-shadow 0.3s",
+            }}
+            onFocus={(e) =>
+              (e.target.style.boxShadow = "0 0 5px rgba(255, 165, 0, 0.5)")
+            }
+            onBlur={(e) => (e.target.style.boxShadow = "none")}
           />
+          {preview && (
+            <div className="preview-box mt-3 text-center">
+              <img src={preview} alt="preview" className="preview-img" />
+            </div>
+          )}
         </div>
 
-        {/* Submit */}
+        {/* Submit button */}
         <button
           type="submit"
-          className="w-full bg-orange-500 text-white py-3 rounded-xl font-semibold hover:bg-orange-600 transition transform hover:scale-105 shadow-md"
+          className="btn btn-orange w-100 fw-bold"
+          disabled={isSubmitting}
         >
-          ✅ Enregistrer la tâche
+          {isSubmitting ? "🐝 Creating..." : "✅ Save Task"}
         </button>
       </form>
     </div>

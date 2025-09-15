@@ -4,6 +4,8 @@ import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
 // ✅ Import unique des vues
 import DataScientist from "./views/DataScientist";
+import App from "./App";
+import ProfileFr from "profileFr";
 import WebDevelopment from "./views/webDevelopment";
 import SoftwareDevelopment from "./views/softwareDevelopment";
 import Designer from "./views/designer";
@@ -27,11 +29,15 @@ import Index from "views/Index.js";
 // ✅ Import des styles
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "assets/styles/tailwind.css";
+import './index.css';
+
 
 ReactDOM.render(
   <BrowserRouter>
     <Switch>
       {/* ✅ Routes des services */}
+      <Route path="/app" component={App} />
+      <Route path="/profilefr" component={ProfileFr} />
       <Route path="/freelancer/home" component={FreelancerHome} />
       <Route path="/client/home" component={ClientHome} />
       <Route path="/freelancer-page" component={FreelancerPage} />

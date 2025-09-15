@@ -1,0 +1,146 @@
+.bg-light-orange {
+  background: #fff7f0;
+}
+/* Arrière-plan moderne dégradé */
+.bg-light-orange {
+  background: linear-gradient(135deg, #fff7f0, #ffe0cc, #ffb380);
+  background-size: 400% 400%;
+  animation: gradientAnimation 12s ease infinite;
+  min-height: 100vh;
+}
+
+/* Animation du dégradé */
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+.bg-light-orange {
+  background: #ff7f50 !important; /* ton orange */
+}
+
+.bg-full {
+  background-image: none !important; /* enlève l’image imposée */
+}
+.bg-full {
+  background-image: none !important;
+  background-color: #ffffff !important; /* ton orange */
+}
+
+
+.bg-light-orange {
+  background: linear-gradient(135deg, #ff8800, #ffbb33); /* dégradé orange */
+}
+.bg-light-orange {
+  background-color: #ff7f50; /* Orange doux (tu peux changer le code hex) */
+}
+
+.bg-gradient-orange {
+  background: linear-gradient(180deg, #ff7a29, #ff6600);
+}
+.text-orange {
+  color: #ff6600 !important;
+}
+.btn-orange {
+  background-color: #ff6600;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 8px;
+  border: none;
+}
+.btn-orange:hover {
+  background-color: #e65c00;
+  color: #fff;
+}
+.login-card {
+  width: 420px;
+  border-radius: 16px;
+  overflow: hidden;
+}
+/* ICON */
+.login-icon {
+  font-size: 45px;
+  margin-bottom: 10px;
+}
+/* ONGLET STYLE */
+.tabs-container {
+  display: flex;
+  border-bottom: 1px solid #eee;
+}
+.tab-btn {
+  background: #fff;
+  border: none;
+  padding: 12px;
+  font-weight: bold;
+  color: #555;
+  cursor: pointer;
+}
+.tab-btn.active {
+  background: #fff7f0;
+  color: #ff6600;
+  border-bottom: 3px solid #ff6600;
+}
+.bg-light-orange {
+  background: #fff7f0;
+}
+.bg-gradient-orange {
+  background: linear-gradient(180deg, #ff7a29, #ff6600);
+}
+.text-orange {
+  color: #ff6600 !important;
+}
+.btn-orange {
+  background: linear-gradient(90deg, #ff7a29, #ff6600);
+  color: #fff;
+  font-weight: bold;
+  border-radius: 8px;
+  border: none;
+  padding: 10px;
+}
+.btn-orange:hover {
+  background: linear-gradient(90deg, #e65c00, #cc5200);
+  color: #fff;
+}
+.login-card {
+  width: 420px;
+  border-radius: 16px;
+  overflow: hidden;
+}
+/* ICON */
+.login-icon {
+  font-size: 45px;
+  margin-bottom: 10px;
+}
+/* ONGLET STYLE */
+.tabs-container {
+  display: flex;
+  border-bottom: 1px solid #eee;
+}
+.tab-btn {
+  background: #fff;
+  border: none;
+  padding: 12px;
+  font-weight: bold;
+  color: #555;
+  cursor: pointer;
+}
+.tab-btn.active {
+  background: #fff7f0;
+  color: #ff6600;
+  border-bottom: 3px solid #ff6600;
+}
+/* INPUTS */
+.input-group-text {
+  background: #fff;
+  border-right: none;
+}
+.form-control {
+  border-left: none;
+}
+

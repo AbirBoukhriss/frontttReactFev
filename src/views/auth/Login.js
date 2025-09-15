@@ -1,24 +1,38 @@
+/* eslint-disable */
 import React, { useState } from "react";
-import { useHistory, Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import { addUserClient } from "../../Service/ApiUser"; 
 import "react-toastify/dist/ReactToastify.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./Login.css";
 
 export default function Login() {
   const history = useHistory();
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [activeTab, setActiveTab] = useState("login");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Common fields
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+    role: "",
+  });
+
+  // ✅ Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // ✅ Login
   const handleLogin = async () => {
     const { email, password } = formData;
 
     if (!email || !password) {
-      toast.error("Veuillez remplir tous les champs.");
+      toast.error("Please fill in all fields.");
       return;
     }
 
@@ -34,32 +48,61 @@ export default function Login() {
       const user = res.data.user;
 
       if (!user || !user._id || !user.role) {
-        toast.error("Utilisateur invalide ou rôle introuvable.");
+        toast.error("Invalid user or role not found.");
         return;
       }
 
-      // ✅ Sauvegarder les infos utiles dans localStorage
-      localStorage.setItem("userId", user._id); 
-      console.log("Logged in userId:", user._id);
-     // ID MongoDB → utile pour le chat
-      localStorage.setItem("username", user.username || ""); 
+      // ✅ Save useful info
+      localStorage.setItem("userId", user._id);
+      localStorage.setItem("username", user.username || "");
       localStorage.setItem("role", user.role);
 
-      toast.success("Connexion réussie !");
+      toast.success("Login successful!");
 
-      // ✅ Redirection selon rôle
+      // ✅ Redirect by role
       setTimeout(() => {
-        if (user.role === "client") {
-           history.push("/client/home");  // ou "/client/home"
-        } else if (user.role === "freelancer") {
-          history.push("/freelancer/home"); // ou "/freelancer/home"
-        } else {
-          toast.error("Rôle non reconnu.");
-        }
+        if (user.role === "client") history.push("/client/home");
+        else if (user.role === "freelancer") history.push("/freelancer/home");
+        else toast.error("Unknown role.");
       }, 1200);
     } catch (error) {
       console.error(error);
-      const msg = error.response?.data?.message || "Erreur de connexion.";
+      const msg = error.response?.data?.message || "Login error.";
+      toast.error(msg);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // ✅ Register
+  const handleRegister = async () => {
+    const { username, email, password, role } = formData;
+
+    if (!username || !email || !password || !role) {
+      toast.error("All fields are required.");
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      toast.error("Invalid email.");
+      return;
+    }
+
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters.");
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      await addUserClient(formData); 
+
+      toast.success("✅ Account created successfully!");
+      setFormData({ username: "", email: "", password: "", role: "" });
+      setActiveTab("login");
+    } catch (error) {
+      console.error(error);
+      const msg = error.response?.data?.message || "Registration error.";
       toast.error(msg);
     } finally {
       setIsSubmitting(false);
@@ -67,91 +110,195 @@ export default function Login() {
   };
 
   return (
-    <>
+    <div className="d-flex justify-content-center align-items-center vh-100 bg-light-orange">
       <ToastContainer />
-      <div className="container mx-auto px-4 h-full">
-        <div className="flex content-center items-center justify-center h-full">
-          <div className="w-full lg:w-4/12 px-4">
-            <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-200 border-0">
-              <div className="rounded-t mb-0 px-6 py-6">
-                <div className="text-center mb-3">
-                  <h6 className="text-blueGray-500 text-sm font-bold">
-                    Sign in
-                  </h6>
-                </div>
-                <hr className="mt-6 border-b-1 border-blueGray-300" />
+      <div className="card login-card shadow-lg">
+        {/* HEADER */}
+        <div className="card-header text-center bg-gradient-orange text-white rounded-top">
+          <div className="login-icon">👀</div>
+          <h3 className="mb-1 font-weight-bold">Freelance</h3>
+          <p className="mb-2">Log in to your account</p>
+        </div>
+
+        {/* TABS */}
+        <div className="tabs-container d-flex">
+          <button
+            className={`tab-btn w-50 ${activeTab === "login" ? "active" : ""}`}
+            onClick={() => setActiveTab("login")}
+          >
+            Login
+          </button>
+          <button
+            className={`tab-btn w-50 ${activeTab === "register" ? "active" : ""}`}
+            onClick={() => setActiveTab("register")}
+          >
+            Register
+          </button>
+        </div>
+
+        {/* FORM */}
+        <div className="card-body">
+          {/* ---- LOGIN ---- */}
+          {activeTab === "login" && (
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (!isSubmitting) handleLogin();
+              }}
+            >
+              {/* EMAIL */}
+              <div className="form-group mb-3">
+                <label>Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="form-control"
+                  placeholder="Enter your email"
+                  required
+                />
               </div>
-              <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    if (!isSubmitting) handleLogin();
-                  }}
+
+              {/* PASSWORD */}
+              <div className="form-group mb-3">
+                <label>Password</label>
+                <input
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="form-control"
+                  placeholder="********"
+                  required
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="btn btn-orange w-100 rounded-pill py-2"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Logging in..." : "Login"}
+              </button>
+
+              <p className="text-center mt-3">
+                Don’t have an account?{" "}
+                <a href="#" onClick={() => setActiveTab("register")} className="text-orange">
+                  Create one
+                </a>
+              </p>
+            </form>
+          )}
+
+          {/* ---- REGISTER ---- */}
+          {activeTab === "register" && (
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (!isSubmitting) handleRegister();
+              }}
+            >
+              <div className="form-group mb-3">
+                <label>Full Name</label>
+                <input
+                  type="text"
+                  name="username"
+                  value={formData.username}
+                  onChange={handleChange}
+                  className="form-control"
+                  placeholder="Enter your name"
+                  required
+                />
+              </div>
+
+              <div className="form-group mb-3">
+                <label>Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="form-control"
+                  placeholder="Enter your email"
+                  required
+                />
+              </div>
+
+              <div className="form-group mb-3">
+                <label>Password</label>
+                <input
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="form-control"
+                  placeholder="********"
+                  required
+                />
+              </div>
+              <div className="form-group mb-3">
+                <label>Phone</label>
+                <input
+                  type="text"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  className="form-control"
+                  placeholder="Enter your phone number"
+                  required
+                />
+              </div>
+
+
+                  <div className="form-group mb-3">
+                <label>Address</label>
+                <input
+                  type="text"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  className="form-control"
+                  placeholder="Enter your address"
+                  required
+                />
+              </div>
+
+              <div className="form-group mb-3">
+                <label>Role</label>
+                <select
+                  name="role"
+                  value={formData.role}
+                  onChange={handleChange}
+                  className="form-control"
+                  required
                 >
-                  <div className="text-blueGray-400 text-center mb-3 font-bold">
-                    <small>Connectez-vous avec vos identifiants</small>
-                  </div>
-
-                  {/* Email */}
-                  <div className="relative w-full mb-3">
-                    <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      className="border px-3 py-2 rounded w-full text-sm text-gray-700"
-                      placeholder="Email"
-                      required
-                    />
-                  </div>
-
-                  {/* Mot de passe */}
-                  <div className="relative w-full mb-3">
-                    <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">
-                      Mot de passe
-                    </label>
-                    <input
-                      type="password"
-                      name="password"
-                      value={formData.password}
-                      onChange={handleChange}
-                      className="border px-3 py-2 rounded w-full text-sm text-gray-700"
-                      placeholder="Mot de passe"
-                      required
-                    />
-                  </div>
-
-                  <div className="text-center mt-6">
-                    <button
-                      className="bg-blueGray-800 text-white text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg w-full"
-                      type="submit"
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? "Connexion..." : "Se connecter"}
-                    </button>
-                  </div>
-                </form>
+                  <option value="">-- Select a role --</option>
+                  <option value="client">Client</option>
+                  <option value="freelancer">Freelancer</option>
+                </select>
               </div>
-            </div>
 
-            <div className="flex flex-wrap mt-6 relative">
-              <div className="w-1/2">
-                <Link to="/auth/forget" className="text-blueGray-200">
-                  <small>Mot de passe oublié ?</small>
-                </Link>
+              <div className="text-center mt-4">
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="bg-orange-500 text-white text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg w-full"
+                >
+                  {isSubmitting ? "Creating account..." : "Create account"}
+                </button>
               </div>
-              <div className="w-1/2 text-right">
-                <Link to="/auth/register" className="text-blueGray-200">
-                  <small>Créer un compte</small>
-                </Link>
-              </div>
-            </div>
-          </div>
+
+              <p className="text-center mt-3">
+                Already registered?{" "}
+                <a href="#" onClick={() => setActiveTab("login")} className="text-orange">
+                  Login
+                </a>
+              </p>
+            </form>
+          )}
         </div>
       </div>
-    </>
+    </div>
   );
 }
