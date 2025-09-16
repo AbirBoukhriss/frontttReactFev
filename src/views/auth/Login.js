@@ -61,7 +61,7 @@ export default function Login() {
 
       // ✅ Redirect by role
       setTimeout(() => {
-        if (user.role === "client") history.push("/client/home");
+        if (user.role === "client") history.push("/App");
         else if (user.role === "freelancer") history.push("/freelancer/home");
         else toast.error("Unknown role.");
       }, 1200);
