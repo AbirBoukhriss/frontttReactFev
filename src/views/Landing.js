@@ -7,6 +7,7 @@ import Navbar from "components/Navbars/IndexNavbar";
 import ChatBox from "components/ChatBox";
 import { initSocket, getSocket } from "../socket";
 
+
 export default function Landing() {
   const [freelancers, setFreelancers] = useState([]);
   const [filteredFreelancers, setFilteredFreelancers] = useState([]);
@@ -254,6 +255,9 @@ export default function Landing() {
   return (
     <>
       <Navbar />
+<br></br>
+<br></br>
+<br></br>
 
       {/* Hero Section */}
       <div className="bg-gradient-orange text-white py-5 mb-5">

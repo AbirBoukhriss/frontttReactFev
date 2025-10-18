@@ -524,13 +524,14 @@ class App extends Component {
               </div>
             </div>
 
-            <button
-              type="button"
-              className="btn btn-light w-100 mt-3"
-              onClick={() => (window.location.href = "http://localhost:3000/")}
-            >
-              <i className="fas fa-home me-2"></i> Home
-            </button>
+          <button
+  type="button"
+  className="btn btn-light w-100 mt-3"
+  onClick={() => (window.location.href = "http://localhost:3000/")}
+>
+  <i className="fas fa-home me-2"></i> Home
+</button>
+
           </div>
 
           <nav className="sidebar-nav">

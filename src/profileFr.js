@@ -566,6 +566,8 @@ export default function ProfileFr() {
 
   const userId = localStorage.getItem("userId");
   const history = useHistory();
+  const goHome = () => history.push("/");
+
 
   const fetchFreelancer = async () => {
     if (!userId) { setLoading(false); return; }
@@ -661,6 +663,17 @@ export default function ProfileFr() {
             </div>
           </div>
         </div>
+{/* Bouton Home */}
+<div className="px-3 mb-3">
+  <button
+    className="nav-link w-100 d-flex align-items-center"
+    onClick={goHome}
+    style={{ background: "#fff7ed", borderRadius: 12, padding: "10px 14px" }}
+  >
+    <i className="fas fa-home" style={{ marginRight: 10 }}></i>
+    <span>Home</span>
+  </button>
+</div>
 
         <nav className="sidebar-nav">
           {[
